@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Configs">
-      <change afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Initial flask file">
+      <change afterPath="$PROJECT_DIR$/app/repositories/user_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routes/user_routes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/user_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
     </list>
@@ -62,6 +64,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\app\repositories" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -120,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728165211795</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Initial flask file">
+      <option name="closed" value="true" />
+      <created>1728165650501</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1728165650501</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,6 +153,7 @@
     <MESSAGE value="Initial folder structure" />
     <MESSAGE value="Models" />
     <MESSAGE value="Configs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Configs" />
+    <MESSAGE value="Initial flask file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial flask file" />
   </component>
 </project>
