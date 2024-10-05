@@ -2,7 +2,7 @@ import os
 import re
 
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 from mysql.connector import Error as MySQLError
 
 from app.services.user_service import UserService
@@ -142,5 +142,40 @@ def login():
         return jsonify({"status": "error", "message": "Invalid input format. JSON is required."}), 400
     except MySQLError as e:
         return handle_mysql_error(e)
+    except Exception as e:
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+
+@user_bp.route('/users/token', methods=['POST'])
+@jwt_required(refresh=True)  # Protect this endpoint with JWT
+def refresh():
+    """
+    Refresh the access token using a refresh token.
+
+    **Security:**
+        - Requires a valid bearer refresh token.
+
+    **Parameters:**
+        - `Authorization` (header): Bearer refresh token required to generate a new access token.
+
+    **Responses:**
+        - `200 OK`: New access token generated successfully.
+        - `401 Unauthorized`: Missing or invalid refresh token.
+        - `500 Internal Server Error`: For server-related issues.
+    """
+    current_user = get_jwt_identity()
+
+    try:
+        new_access_token = create_access_token(identity=current_user)
+
+        return jsonify({
+            "status": "success",
+            "data": {
+                "tokens": {
+                    "access_token": new_access_token
+                }
+            }
+        }), 200
+
     except Exception as e:
         return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
