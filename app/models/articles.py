@@ -1,8 +1,10 @@
-# The 'Article' class represents a scientific article in the Scientific Article Management System.
-# It encapsulates essential information related to each article, such as title, authors, publication date,
-# keywords, and other metadata.
-
 class Article:
+    """
+    The 'Article' class represents a scientific article in the Scientific Article Management System.
+    It encapsulates essential information related to each article, such as title, authors, publication date,
+    keywords, and other metadata.
+    """
+
     def __init__(self, id, title, authors, publication_date, keywords, abstract, journal, doi, pages, user_id):
         # Initialize a new instance of the Article class with the following attributes:
 
