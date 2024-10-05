@@ -4,6 +4,7 @@ import re
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 from mysql.connector import Error as MySQLError
+from werkzeug.exceptions import NotFound, Conflict
 
 from app.services.user_service import UserService
 
@@ -163,19 +164,76 @@ def refresh():
         - `401 Unauthorized`: Missing or invalid refresh token.
         - `500 Internal Server Error`: For server-related issues.
     """
+    # Retrieve the identity of the currently authenticated user from the JWT token
     current_user = get_jwt_identity()
 
     try:
+        # Create a new access token for the current user
         new_access_token = create_access_token(identity=current_user)
 
+        # Return a JSON response indicating success, along with the new access token
         return jsonify({
             "status": "success",
             "data": {
                 "tokens": {
-                    "access_token": new_access_token
+                    "access_token": new_access_token  # Include the new access token in the response
                 }
             }
         }), 200
 
     except Exception as e:
+        # Handle any exceptions that occur during the token creation process
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+
+@user_bp.route('/users/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def update_user(user_id):
+    """
+    Update a user by ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Parameters:**
+        - `user_id` (path): ID of the user to be updated.
+        - `Authorization` (header): Bearer token required to authorize the request.
+        - `user_data` (body): JSON parameters to update the user, including:
+            - `username`: New username for the user (string).
+            - `first_name`: New first name for the user (string).
+            - `last_name`: New last name for the user (string).
+
+    **Responses:**
+        - `200 OK`: User updated successfully.
+        - `400 Bad Request`: Validation error or request body issue.
+        - `404 Not Found`: User not found.
+        - `404 Not Found`: Username is already taken by another user.
+        - `500 Internal Server Error`: For server-related issues.
+    """
+    try:
+        # Retrieve the JSON data from the request body
+        data = request.json
+
+        # Check if the request body is empty or not JSON
+        if data is None:
+            raise ValueError("Request body must be JSON.")
+
+        # Update the user information by passing the entire data to the user service
+        user_service.update_user(user_id, data)  # Pass the entire data for update
+
+        # Return a success response indicating that the user has been updated
+        return jsonify({"message": "User updated successfully"}), 200
+
+    except ValueError as e:
+        # Handle cases where the request body is not valid JSON
+        return jsonify({"error": str(e)}), 400
+    except NotFound as e:
+        return jsonify({"error": str(e)}), 404
+    except Conflict as e:
+        return jsonify({"error": str(e)}), 409
+    except MySQLError as e:
+        # Handle MySQL-specific errors during the update operation
+        return handle_mysql_error(e)
+    except Exception as e:
+        # Handle any other exceptions that occur during the process
         return jsonify({"error": "Internal Server Error", "message": str(e)}), 500

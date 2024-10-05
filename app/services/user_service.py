@@ -1,3 +1,4 @@
+from werkzeug.exceptions import NotFound, Conflict
 from werkzeug.security import generate_password_hash, check_password_hash  # Import functions for password hashing
 
 from app.models.user import User  # Import the User model to work with user data
@@ -35,7 +36,14 @@ class UserService:
         """Update an existing user's details based on provided user_data."""
         user = self.user_repository.get_user_by_id(user_id)  # Fetch the user by ID
         if not user:
-            raise ValueError("User not found.")  # Raise an error if the user does not exist
+            raise NotFound("User not found.")  # Raise NotFound if the user does not exist
+
+        # Check if the username is being updated and if it is already taken by another user
+        new_username = user_data.get("username")
+        if new_username and new_username != user.username:
+            existing_user = self.user_repository.get_user_by_username(new_username)
+            if existing_user:
+                raise Conflict("Username is already taken by another user.")
 
         # Update user attributes directly from user_data if provided
         for key, value in user_data.items():
