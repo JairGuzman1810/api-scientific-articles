@@ -1,0 +1,6 @@
+Flask
+Flask-JWT-Extended
+python-dotenv
+mysql-connector-python
+Werkzeug
+flask-swagger-ui
