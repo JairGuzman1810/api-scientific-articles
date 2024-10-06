@@ -3,6 +3,7 @@ from werkzeug.exceptions import NotFound  # Import exceptions for error handling
 from app.models.article import Article  # Import the Article model to work with article data
 from app.repositories.article_repository import \
     ArticleRepository  # Import the ArticleRepository for database operations
+from app.repositories.user_repository import UserRepository  # Import the UserRepository for user interactions
 
 
 class ArticleService:
@@ -13,11 +14,21 @@ class ArticleService:
     """
 
     def __init__(self):
-        # Initialize ArticleRepository to handle database interactions
+        # Initialize repositories to handle database interactions
         self.article_repository = ArticleRepository()
+        self.user_repository = UserRepository()  # Initialize UserRepository
 
     def create_article(self, article_data):
         """Create a new article using provided article data."""
+
+        # Extract user ID from the article data
+        user_id = article_data.get('user_id')
+
+        # Check if the user exists
+        user = self.user_repository.get_user_by_id(user_id)  # Fetch user by ID
+        if not user:
+            raise NotFound("User not found.")  # Raise NotFound if the user does not exist
+
         # Create an Article object from the provided data
         article = Article(None, **article_data)
         return self.article_repository.create_article(article)  # Persist the article in the database

@@ -190,7 +190,7 @@ def update_user(user_id):
         user_service.update_user(user_id, data)  # Pass the entire data for update
 
         # Return a success response indicating that the user has been updated
-        return jsonify({"message": "User updated successfully"}), 200
+        return jsonify({"message": "User updated successfully", "status": "success"}), 200
 
     except Exception as e:
         # Use the common exception handler for all exceptions
@@ -234,7 +234,7 @@ def update_password(user_id):
         if user and check_password_hash(user.password_hash, data['old_password']):
             # Update the user's password if verification is successful
             user_service.update_user_password(user_id, data['new_password'])
-            return jsonify({"message": "Password updated successfully"}), 200
+            return jsonify({"message": "Password updated successfully", "status": "success"}), 200
 
         # Raise an UnauthorizedError if the old password is incorrect
         raise Unauthorized("Old password is incorrect")

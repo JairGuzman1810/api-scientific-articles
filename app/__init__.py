@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager
 from werkzeug.exceptions import HTTPException
 
 from .config import Config
+from .routes.article_routes import article_bp
 from .routes.user_routes import user_bp
 
 
@@ -40,5 +41,6 @@ def create_app():
         return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
 
     app.register_blueprint(user_bp, url_prefix='/api')
+    app.register_blueprint(article_bp, url_prefix='/api')
 
     return app
