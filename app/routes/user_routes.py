@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash
 from app.services.user_service import UserService
 from app.utils.error_handling import handle_common_exceptions
 from app.utils.tokens import generate_tokens
-from app.utils.validations import validate_json_and_required_fields
+from app.utils.validations import validate_json_and_required_fields, validate_username_and_password
 
 user_bp = Blueprint('user', __name__)
 user_service = UserService()
@@ -18,8 +18,8 @@ def register():
     Register a new user.
 
     **Request Body Parameters:**
-        - `username`: str, required - Unique username for the new user.
-        - `password`: str, required - Password for the new user.
+        - `username`: str, required - The username of the user (must be an email).
+        - `password`: str, required - The password for the user (minimum 6 characters).
         - `first_name`: str, required - User's first name.
         - `last_name`: str, required - User's last name.
 
@@ -32,6 +32,9 @@ def register():
     try:
         # Validate that the request is JSON and contains the required fields
         data = validate_json_and_required_fields(['username', 'password', 'first_name', 'last_name'])
+
+        # Validate the username and password format
+        validate_username_and_password(data['username'], data['password'])
 
         # Register a new user with the provided details
         user = user_service.register_user(
@@ -68,8 +71,8 @@ def login():
     User login.
 
     **Request Body Parameters:**
-        - `username`: str, required - The username of the user.
-        - `password`: str, required - The password for the user.
+        - `username`: str, required - The username of the user (must be an email).
+        - `password`: str, required - The password for the user (minimum 6 characters).
 
     **Response:**
         - `200 OK`: On successful authentication with user data and tokens.
@@ -81,25 +84,33 @@ def login():
         # Validate that the request is JSON and contains the required fields
         data = validate_json_and_required_fields(['username', 'password'])
 
+        # Validate the username and password format
+        validate_username_and_password(data['username'], data['password'])
+
         # Authenticate the user with the provided credentials
         user = user_service.authenticate_user(data['username'], data['password'])
 
-        # Generate JWT tokens for the authenticated user
-        tokens = generate_tokens(user.id)
+        # Check if user is authenticated successfully
+        if user:
+            # Generate JWT tokens for the authenticated user
+            tokens = generate_tokens(user.id)
 
-        # Return success response with user data and tokens
-        return jsonify({
-            "status": "success",
-            "data": {
-                "user": {
-                    "id": user.id,
-                    "username": user.username,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name
-                },
-                "tokens": tokens  # Use the generated tokens dictionary
-            }
-        }), 200
+            # Return success response with user data and tokens
+            return jsonify({
+                "status": "success",
+                "data": {
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "first_name": user.first_name,
+                        "last_name": user.last_name
+                    },
+                    "tokens": tokens  # Use the generated tokens dictionary
+                }
+            }), 200
+
+        # Return error response if credentials are invalid
+        raise Unauthorized("Invalid Credentials.")
 
     except Exception as e:
         return handle_common_exceptions(e)  # Use the utility function for common exception handling
@@ -157,7 +168,7 @@ def update_user(user_id):
         - `user_id` (path): ID of the user to be updated.
         - `Authorization` (header): Bearer token required to authorize the request.
         - `user_data` (body): JSON parameters to update the user, including:
-            - `username`: New username for the user (string).
+            - `username`: New username (must be an email) for the user (string).
             - `first_name`: New first name for the user (string).
             - `last_name`: New last name for the user (string).
 
@@ -169,9 +180,11 @@ def update_user(user_id):
         - `500 Internal Server Error`: For server-related issues.
     """
     try:
-
         # Validate that the required fields are present
         data = validate_json_and_required_fields(['username', 'first_name', 'last_name'])
+
+        # Validate the username format
+        validate_username_and_password(username=data['username'])
 
         # Update the user information by passing the entire data to the user service
         user_service.update_user(user_id, data)  # Pass the entire data for update
@@ -210,6 +223,9 @@ def update_password(user_id):
     try:
         # Validate that the request is JSON and contains the required fields
         data = validate_json_and_required_fields(['old_password', 'new_password'])
+
+        # Validate the new password to ensure it meets the security requirements
+        validate_username_and_password(username=None, password=data['new_password'])
 
         # Fetch the user by ID
         user = user_service.get_user_by_id(user_id)

@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Article repositories&#10;Article services">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Enhanced how exceptions are handled&#10;Better structure">
       <change afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/error_handling.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/tokens.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/validations.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/user_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/user_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/user_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/validations.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/validations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +181,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728192535538</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Enhanced how exceptions are handled&#10;Better structure">
+      <option name="closed" value="true" />
+      <created>1728221678036</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1728221678036</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -212,6 +216,7 @@
     <MESSAGE value="Update password" />
     <MESSAGE value="Delete user" />
     <MESSAGE value="Article repositories&#10;Article services" />
-    <option name="LAST_COMMIT_MESSAGE" value="Article repositories&#10;Article services" />
+    <MESSAGE value="Enhanced how exceptions are handled&#10;Better structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhanced how exceptions are handled&#10;Better structure" />
   </component>
 </project>
