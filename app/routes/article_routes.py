@@ -264,3 +264,29 @@ def update_article(article_id):
     except Exception as e:
         # Handle any exceptions using the common exception handler
         return handle_common_exceptions(e)
+
+
+@article_bp.route('/articles/<int:article_id>', methods=['DELETE'])
+@jwt_required()
+def delete_article(article_id):
+    """
+    Delete an article by ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Path Parameters:**
+        - `article_id`: int, required - ID of the article to be deleted.
+
+    **Response:**
+        - `200 OK`: Article deleted successfully.
+        - `404 Not Found`: If the article with the given ID does not exist.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        article_service.delete_article(article_id)
+        return jsonify({"message": "Article deleted successfully", "status": "success"}), 200
+
+    except Exception as e:
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)
