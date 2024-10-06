@@ -164,3 +164,57 @@ def get_articles_by_user(user_id):
     except Exception as e:
         # Handle any exceptions using the common exception handler
         return handle_common_exceptions(e)
+
+
+@article_bp.route('/articles/<int:article_id>', methods=['PUT'])
+@jwt_required()
+def update_article(article_id):
+    """
+    Update an article by ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Path Parameters:**
+        - `article_id`: int, required - ID of the article to be updated.
+
+    **Request Body Parameters:**
+        - `title`: str - New title for the article.
+        - `authors`: array of str - List of authors for the article.
+        - `keywords`: array of str - List of keywords related to the article.
+        - `publication_date`: str (YYYY-MM-DD) - Publication date of the article.
+        - `abstract`: str - Summary of the article.
+        - `journal`: str - Name of the journal.
+        - `doi`: str - DOI of the article.
+        - `pages`: str - Page numbers of the article.
+
+    **Response:**
+        - `200 OK`: Article updated successfully with a success message.
+        - `400 Bad Request`: If the input is invalid or the request body is not JSON.
+        - `404 Not Found`: If the article to be updated is not found.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        # Retrieve and validate the JSON data from the request body
+        data = validate_json_and_required_fields(
+            ['title', 'authors', 'publication_date', 'keywords', 'abstract', 'journal', 'doi']
+        )
+
+        # Validate authors and keywords fields to ensure they are arrays
+        data['authors'] = validate_array_field(data.get('authors', []), "authors")
+        data['keywords'] = validate_array_field(data.get('keywords', []), "keywords")
+
+        # Update the article using the article service
+        article_service.update_article(article_id, data)
+
+        # Prepare the response data
+        response_data = {
+            "message": "Article updated successfully",  # Indicate the status of the request
+            "status": "success"
+        }
+
+        # Return the success response with status 200
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        return handle_common_exceptions(e)  # Use the utility function for common exception handling

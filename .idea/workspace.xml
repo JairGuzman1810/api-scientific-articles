@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Get article">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Get article by user">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/repositories/article_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/repositories/article_repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/article_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/services/article_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/article_service.py" afterDir="false" />
     </list>
@@ -220,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728230145089</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Get article by user">
+      <option name="closed" value="true" />
+      <created>1728232367501</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1728232367501</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -252,6 +261,7 @@
     <MESSAGE value="Response changes&#10;Create article" />
     <MESSAGE value="Get articles" />
     <MESSAGE value="Get article" />
-    <option name="LAST_COMMIT_MESSAGE" value="Get article" />
+    <MESSAGE value="Get article by user" />
+    <option name="LAST_COMMIT_MESSAGE" value="Get article by user" />
   </component>
 </project>

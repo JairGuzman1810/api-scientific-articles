@@ -67,7 +67,7 @@ class ArticleService:
                        key) and value is not None:  # Check if the article object has the attribute and value is not None
                 setattr(article, key, value)  # Set the new value
 
-        return self.article_repository.update_article(article)  # Persist the updated article in the database
+        return self.article_repository.update_article(article_id, article)
 
     def delete_article(self, article_id):
         """Delete an article from the database."""

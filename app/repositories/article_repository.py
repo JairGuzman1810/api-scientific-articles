@@ -77,7 +77,7 @@ class ArticleRepository:
             return [Article(*article) for article in results]  # Convert each result into an Article instance
         return None  # Return None if no articles found
 
-    def update_article(self, article):
+    def update_article(self, article_id, article):
         """Update an existing article's information in the database."""
         self.cursor.execute(
             """
@@ -95,7 +95,7 @@ class ArticleRepository:
                 article.journal,
                 article.doi,
                 article.pages,
-                article.id
+                article_id
             )  # Parameterized query
         )
         self.connection.commit()  # Commit the transaction to save changes
