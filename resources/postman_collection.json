@@ -1,0 +1,545 @@
+{
+    "collection": {
+        "info": {
+            "_postman_id": "df0c37ce-c996-4d5f-8cae-c10102ca4ee2",
+            "name": "Scientific Articles",
+            "description": "# Scientific Articles Management API - Documentation\n\nThis documentation is for the **Scientific Articles Management API**, developed as part of a technical test for the Muyal Research Group (MRG).\n\nWelcome to the **Scientific Articles Management API** Postman documentation! This API allows users to manage a comprehensive database of scientific articles, providing functionality for creating, retrieving, updating, and deleting articles, as well as managing user authentication and authorization. The API is designed to streamline the handling of scholarly data such as article metadata, keywords, authors, and more.\n\n## Base URL\n\nThe API is accessible through the following base URL:\n\n```\nhttp://localhost:5000/api\n\n ```\n\nor replace with your deployed server URL:\n\n```\nhttps://your-domain.com/api\n\n ```\n\n## Collection Variables\n\nThe **Scientific Articles Management API** utilizes the following collection variables to streamline requests and enhance usability in API interactions:\n\n1. **`BASE_URL`**\n    \n    - **Description**: This variable holds the base URL of the API, which is the root address for all endpoint requests. It simplifies the process of making API calls by allowing users to reference this variable instead of repeating the full URL each time.\n        \n    - **Example**:\n        \n        - For local development: `http://localhost:5000/api`\n            \n        - For production: `https://your-domain.com/api`\n            \n2. **`token`**\n    \n    - **Description**: This variable stores the access token obtained upon user authentication. It is required for making authorized requests to protected endpoints within the API.\n        \n    - **Usage**: Include this token in the `Authorization` header for each request requiring authentication.\n        \n3. **`refresh_token`**\n    \n    - **Description**: This variable holds the refresh token, which is used to obtain a new access token without requiring the user to log in again. It enables seamless session management for the user.\n        \n    - **Usage**: When the access token expires, utilize this variable to request a new access token through the token refresh endpoint.\n        \n\n## API Features\n\nThe API provides the following core features:\n\n- **User Authentication**: Supports user registration, login, token management (access and refresh tokens), and user profile updates.\n    \n- **Article Management**: Allows the creation, update, deletion, and retrieval of scientific articles, including detailed information such as title, authors, keywords, abstract, journal, DOI, and more.\n    \n- **API Documentation**: Integrated with Swagger for detailed API specifications and endpoint documentation.\n    \n\n## Authentication\n\nThis API uses **JWT (JSON Web Tokens)** for secure authentication. Users must obtain an access token by logging in. The token must be included in the `Authorization` header as a Bearer token for routes that require authentication.\n\n#### Example Authorization Header:\n\n```\nAuthorization: Bearer <your-access-token>\n\n ```\n\n#### Token Expiration:\n\nAccess tokens are short-lived. You can refresh your tokens using the refresh token endpoint to get a new access token without re-authenticating.\n\n## Common Response Structure\n\nMost API responses follow a consistent structure for clarity and ease of use:\n\n- `status`: Indicates the success or failure of the request.\n    \n- `data`: Contains the main response payload, such as user information, articles, or tokens.\n    \n- `message`: Provides additional information on the response (e.g., error messages or success notifications).\n    \n\n#### Example Response:\n\n```\n{\n    \"status\": \"success\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"username\": \"john_doe\",\n            \"first_name\": \"John\",\n            \"last_name\": \"Doe\"\n        },\n        \"tokens\": {\n            \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5c...\",\n            \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5c...\"\n        }\n    },\n    \"message\": \"User successfully registered.\"\n}\n\n ```\n\n### Error Handling\n\nErrors are returned in a structured format, with clear error codes and messages to help developers understand what went wrong. Some common error statuses include:\n\n- **400 Bad Request**: Invalid input data or missing required parameters.\n    \n- **401 Unauthorized**: Invalid or missing authentication credentials.\n    \n- **403 Forbidden**: The user does not have permission to perform the requested action.\n    \n- **404 Not Found**: The requested resource could not be found.\n    \n- **409 Conflict**: The resource already exists (e.g., trying to register a user with an existing username).\n    \n\n#### Example Error Response:\n\n```\n{\n    \"status\": \"error\",\n    \"message\": \"User already exists.\"\n}\n\n ```\n\n## Getting Started\n\nTo begin interacting with the API:\n\n1. Set up your Postman environment with the appropriate base URL and environment variables (such as access tokens).\n    \n2. Explore the available endpoints using this documentation or the included Swagger documentation.\n    \n3. Use your access token in the authorization header to authenticate and make authorized requests.",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "updatedAt": "2024-10-06T19:14:19.000Z",
+            "createdAt": "2024-10-05T22:34:36.000Z",
+            "lastUpdatedBy": "23380113",
+            "uid": "23380113-df0c37ce-c996-4d5f-8cae-c10102ca4ee2"
+        },
+        "item": [
+            {
+                "name": "Users",
+                "item": [
+                    {
+                        "name": "Register",
+                        "id": "fa01a195-c4a6-48f0-9b86-97e7b61f5c35",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n    \"username\": \"john_doe@hotmail.com\",\r\n    \"password\": \"ABC123\",\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\"\r\n}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/register",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "register"
+                                ]
+                            },
+                            "description": "## Register a New User\n\n- **Endpoint:** `/users/register`\n    \n- **Method:** `POST`\n    \n- **Description:** Allows a new user to register by providing necessary information such as username, password, first name, and last name.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n- **Request Body:**\n    \n\n```\n{\n    \"username\": \"johndoe@hotmail.com\",  // Required: Unique username for the user.\n    \"password\": \"P@ssw0rd\",             // Required: User's password, must meet complexity requirements.\n    \"first_name\": \"John\",               // Required: User's first name.\n    \"last_name\": \"Doe\"                  // Required: User's last name.\n}\n\n ```\n\n### Responses:\n\n```\n201:\n{\n  \"data\": {\n    \"tokens\": {\n      \"access_token\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"user\": {\n      \"first_name\": \"string\",\n      \"id\": 0,\n      \"last_name\": \"string\",\n      \"username\": \"string\"\n    }\n  },\n  \"status\": \"success\"\n}\n\n ```\n\n```\n409:\n{\n    \"message\": \"409 Conflict: User already exists.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-fa01a195-c4a6-48f0-9b86-97e7b61f5c35"
+                    },
+                    {
+                        "name": "Login",
+                        "id": "2d184ddb-719f-446c-afde-7af3eec7148e",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n    \"username\": \"john_doe@hotmail.com\",\r\n    \"password\": \"ABC123\"\r\n}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/login",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "login"
+                                ]
+                            },
+                            "description": "## User Login\n\n- **Endpoint:** `/users/login`\n    \n- **Method:** `POST`\n    \n- **Description:** Authenticates a user using their username and password, returning access and refresh tokens upon successful login.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n- **Request Body:**\n    \n\n```\n{\n    \"username\": \"john_doe@hotmail.com\", // Required: Username of the user trying to log in.\n    \"password\": \"P@ssw0rd\" // Required: Password of the user.\n}\n\n ```\n\n### Responses:\n\n```\n200:\n{\n  \"data\": {\n    \"tokens\": {\n      \"access_token\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"user\": {\n      \"first_name\": \"string\",\n      \"id\": 0,\n      \"last_name\": \"string\",\n      \"username\": \"string\"\n    }\n  },\n  \"status\": \"success\"\n}\n\n ```\n\n```\n400:\n{\n  \"message\": \"Request body must be JSON.\",\n  \"status\": \"error\"\n}\n\n ```\n\n```\n401:\n{\n    \"message\": \"401 Unauthorized: Old password is incorrect\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-2d184ddb-719f-446c-afde-7af3eec7148e"
+                    },
+                    {
+                        "name": "Token",
+                        "id": "c1d75b08-3b0d-4968-8678-426199cbfef5",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{refresh_token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "POST",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/token",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "token"
+                                ]
+                            },
+                            "description": "## Refresh Access Token\n\n- **Endpoint:** `/users/token`\n    \n- **Method:** `POST`\n    \n- **Description:** Generates a new access token using a valid refresh token. This endpoint requires the user to be authenticated.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer` // Required: The refresh token is passed in the `Authorization` header as a Bearer token.\n        \n- **Request Body:**\n    \n\n```\n{\n    // No request body is needed; the refresh token is sent in the headers.\n}\n\n ```\n\n### Responses:\n\n```\n200:\n{\n    \"data\": {\n        \"tokens\": {\n            \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyODE3MDQ0MiwianRpIjoiMTZiMTY3NjItMTFjNi00YWFlLTk1YzItN2E1MjEzMGJjMDViIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OCwibmJmIjoxNzI4MTcwNDQyLCJjc3JmIjoiODgwZjllZWYtNmFkMS00ZTJkLWExYjktOTllYzhjODQwNGM2IiwiZXhwIjoxNzI4MTc0MDQyfQ.A5hkof3b06O58LRd2xnDT2ltgCdRR4eiFPmFEoawHqM\"\n        }\n    },\n    \"status\": \"success\"\n}\n\n ```\n\n```\n401:\n{\n    \"error\": \"Invalid token\",\n    \"message\": \"The token provided is invalid or expired.\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-c1d75b08-3b0d-4968-8678-426199cbfef5"
+                    },
+                    {
+                        "name": "Update User",
+                        "id": "726d6d8e-bd26-4a06-a99a-de8098961139",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "PUT",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n    \"username\": \"john_doe@hotmail.com\",\r\n    \"first_name\": \"TEST\",\r\n    \"last_name\": \"ANY\"\r\n}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/8",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "8"
+                                ]
+                            },
+                            "description": "## Update User Information\n\n- **Endpoint:** `/users/{user_id}`\n    \n- **Method:** `PUT`\n    \n- **Description:** Updates the details of a user identified by their unique user ID. Requires authentication to ensure only authorized users can update their information.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer` // Required: Access token for authorization.\n        \n- **Path Parameters:**\n    \n    - `user_id` (integer, required): The ID of the user whose password is to be updated.\n        \n- **Request Body:**\n    \n\n```\n{\n    \"username\": \"Jane_Doe@hotmai.com\",\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n}\n\n ```\n\n### Responses:\n\n```\n200:\n{\n    \"message\": \"User updated successfully\",\n    \"status\": \"success\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n409:\n{\n    \"message\": \"409 Conflict: User already exists.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-726d6d8e-bd26-4a06-a99a-de8098961139"
+                    },
+                    {
+                        "name": "Update Password",
+                        "id": "bcb50c16-1c5a-4516-9f2b-8a9b1b0f09f0",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "PUT",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n    \"old_password\": \"OldP@ssw0rd\",\r\n    \"new_password\": \"NewP@ssw0rd\"\r\n}\r\n\r\n",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/8/password",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "8",
+                                    "password"
+                                ]
+                            },
+                            "description": "## Update User Password\n\n- **Endpoint:** `/users/{user_id}/password`\n    \n- **Method:** `PUT`\n    \n- **Description:** Updates a user's password. Requires the current password and the new password in the request body.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer` // Required: Access token for authorization.\n        \n- **Path Parameters:**\n    \n    - `user_id` (integer, required): The ID of the user whose password is to be updated.\n        \n- **Request Body:**\n    \n\n```\n{\n    \"old_password\": \"OldP@ssw0rd\",   // Required: Current password of the user.\n    \"new_password\": \"NewP@ssw0rd\"     // Required: New password for the user.\n}\n\n ```\n\n### Responses:\n\n```\n200:\n{\n    \"message\": \"Password updated successfully\"\n}\n\n ```\n\n```\n400:\n{\n    \"message\": \"Missing required fields: old_password, new_password\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n401: Wrong password\n{\n    \"message\": \"401 Unauthorized: Old password is incorrect\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n  \"error\": \"string\",\n  \"message\": \"Internal Server Error\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-bcb50c16-1c5a-4516-9f2b-8a9b1b0f09f0"
+                    },
+                    {
+                        "name": "Delete",
+                        "id": "9704533d-a607-4131-a147-e06ccc3949bf",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/users/20",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "users",
+                                    "20"
+                                ]
+                            },
+                            "description": "## Delete User\n\n- **Endpoint:** `/users/{user_id}`\n    \n- **Method:** `DELETE`\n    \n- **Description:** Deletes a user by their unique ID. Requires authentication to ensure only authorized users can delete their account.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Authorization: Bearer` // Required: Access token for authorization.\n        \n- **Path Parameters:**\n    \n    - `user_id` (integer, required): The ID of the user to be deleted.\n        \n\n### Responses:\n\n```\n200:\n{\n  \"message\": \"User deleted successfully.\",\n  \"status\": \"success\"\n}\n\n ```\n\n```\n400:\n{\n  \"message\": \"Invalid request.\",\n  \"status\": \"error\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n  \"error\": \"string\",\n  \"message\": \"Internal Server Error\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-9704533d-a607-4131-a147-e06ccc3949bf"
+                    }
+                ],
+                "id": "5ee59728-00ae-46b1-8dfd-a5999ea04ef2",
+                "description": "The **User Collection** is responsible for managing user-related functionalities in the application, including user registration, login, token management, and user updates. The API utilizes JWT (JSON Web Tokens) for authentication and authorization purposes.\n\n## Endpoints Overview\n\n### 1\\. Register a New User\n\n- **Endpoint:** `/users/register`\n    \n- **Method:** `POST`\n    \n- **Description:** Allows a new user to register by providing necessary information such as username, password, first name, and last name.\n    \n\n---\n\n### 2\\. User Login\n\n- **Endpoint:** `/users/login`\n    \n- **Method:** `POST`\n    \n- **Description:** Authenticates a user using their username and password, returning access and refresh tokens upon successful login.\n    \n\n---\n\n### 3\\. Refresh Access Token\n\n- **Endpoint:** `/users/token`\n    \n- **Method:** `POST`\n    \n- **Description:** Generates a new access token using a valid refresh token. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 4\\. Update User Information\n\n- **Endpoint:** `/users/`\n    \n- **Method:** `PUT`\n    \n- **Description:** Updates the details of a user identified by their unique user ID. Requires authentication to ensure only authorized users can update their information.\n    \n\n---\n\n### 5\\. Update User Password\n\n- **Endpoint:** `/users/{user_id}/password`\n    \n- **Method:** `PUT`\n    \n- **Description:** Updates a user's password. Requires the current password and the new password in the request body.\n    \n\n---\n\n### 6\\. Delete User\n\n- **Endpoint:** `/users/`\n    \n- **Method:** `DELETE`\n    \n- **Description:** Deletes a user by their unique ID. Requires authentication to ensure only authorized users can delete their account.",
+                "uid": "23380113-5ee59728-00ae-46b1-8dfd-a5999ea04ef2"
+            },
+            {
+                "name": "Articles",
+                "item": [
+                    {
+                        "name": "Create Article",
+                        "id": "a453de02-1920-4124-adb1-e9f3df55ef72",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n  \"abstract\": \"string\",\r\n  \"authors\": [\r\n    \"string\"\r\n  ],\r\n  \"doi\": \"string\",\r\n  \"journal\": \"string\",\r\n  \"keywords\": [\r\n    \"string\"\r\n  ],\r\n  \"pages\": 0,\r\n  \"publication_date\": \"2024-10-06\",\r\n  \"title\": \"string\",\r\n  \"user_id\": 24\r\n}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles"
+                                ]
+                            },
+                            "description": "## Create a New Article\n\n- **Endpoint**: `/articles`\n    \n- **Method**: `POST`\n    \n- **Description**: Allows a user to create a new article by providing necessary information such as title, content, keywords, and the user ID associated with the article.\n    \n\n### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer` // Required: Access token for authorization.\n        \n- **Request Body:**\n    \n\n```\n{\n    \"abstract\": \"string\",  // Required: Brief summary of the article's content.\n    \"authors\": [           // Required: Array of authors' names.\n        \"string\"\n    ],\n    \"doi\": \"string\",       // Required: Digital Object Identifier for the article.\n    \"journal\": \"string\",   // Required: Name of the journal where the article is published.\n    \"keywords\": [          // Required: Array of keywords related to the article.\n        \"string\"\n    ],\n    \"pages\": 0,           // Required: Total number of pages of the article.\n    \"publication_date\": \"2024-10-06\", // Required: Date when the article was published.\n    \"title\": \"string\",     // Required: Title of the article.\n    \"user_id\": 0          // Required: ID of the user creating the article.\n}\n\n ```\n\n### Responses:\n\n```\n201:\n{\n    \"data\": {\n        \"article\": {\n            \"abstract\": \"string\",\n            \"authors\": [\n                \"string\"\n            ],\n            \"doi\": \"string\",\n            \"id\": 11,\n            \"journal\": \"string\",\n            \"keywords\": [\n                \"string\"\n            ],\n            \"pages\": 0,\n            \"publication_date\": \"2024-10-06\",\n            \"title\": \"string\",\n            \"user_id\": 24\n        }\n    },\n    \"status\": \"success\"\n}\n\n ```\n\n```\n400:\n{\n    \"message\": \"authors must be an array.\",\n    \"status\": \"error\"}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n409:\n{\n    \"message\": \"409 Conflict: User already exists.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-a453de02-1920-4124-adb1-e9f3df55ef72"
+                    },
+                    {
+                        "name": "Retrieve Articles",
+                        "id": "8b44fdf4-6c91-4193-a238-a622342eca90",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles"
+                                ]
+                            },
+                            "description": "### Retrieve Articles\n\n- **Endpoint:** `/articles`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves a list of articles available in the system. This endpoint requires user authentication.\n    \n\n#### Request\n\n- **Headers:**\n    \n    - **Content-Type:** `application/json`\n        \n    - **Authorization:** `Bearer` // Required: Access token for authorization.\n        \n\n#### Responses:\n\n```\n200:\n{\n    \"data\": [\n        {\n            \"abstract\": \"string\",\n            \"authors\": [\n                \"string\"\n            ],\n            \"doi\": \"string\",\n            \"id\": 11,\n            \"journal\": \"string\",\n            \"keywords\": [\n                \"string\"\n            ],\n            \"pages\": 0,\n            \"publication_date\": \"2024-10-06\",\n            \"title\": \"string\",\n            \"user_id\": 24\n        }\n    ],\n    \"status\": \"success\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-8b44fdf4-6c91-4193-a238-a622342eca90"
+                    },
+                    {
+                        "name": "Retrieve Article",
+                        "id": "01c9cf5a-0419-423e-b88c-9ea7b3aca5e1",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles/10",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles",
+                                    "10"
+                                ]
+                            },
+                            "description": "### Retrieve Article\n\n- **Endpoint:** `/articles/{article_id}`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves a specific article by its ID. This endpoint requires user authentication.\n    \n\n#### Request\n\n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer // Required: Access token for authorization.`\n        \n- **Path Parameters:**\n    \n    - `article_id:`(integer, required): The ID of the article to retrieve.\n        \n\n#### Responses:\n\n```\n200:\n{\n    \"data\": {\n        \"abstract\": \"string\",\n        \"authors\": [\n            \"string\"\n        ],\n        \"doi\": \"string\",\n        \"id\": 11,\n        \"journal\": \"string\",\n        \"keywords\": [\n            \"string\"\n        ],\n        \"pages\": 0,\n        \"publication_date\": \"2024-10-06\",\n        \"title\": \"string\",\n        \"user_id\": 24\n    },\n    \"status\": \"success\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: Article not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-01c9cf5a-0419-423e-b88c-9ea7b3aca5e1"
+                    },
+                    {
+                        "name": "Retrieve Article by User",
+                        "id": "2c0e9772-ebd3-443a-bcea-feeecc748385",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles/user/24",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles",
+                                    "user",
+                                    "24"
+                                ]
+                            },
+                            "description": "### Retrieve Articles by User\n\n- **Endpoint:** `/articles/user/{user_id}`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves all articles associated with a specific user ID. This endpoint requires user authentication.\n    \n\n---\n\n### Request\n\n- **Headers:**\n    \n    - **Content-Type:** `application/json`\n        \n    - **Authorization:** `Bearer // Required: Access token for authorization.`\n        \n- **Path Parameters:**\n    \n    - `user_id:`(integer, required): The ID of the user whose articles are to be retrieved.\n        \n\n---\n\n### Responses\n\n```\n200:\n{\n    \"data\": [\n        {\n            \"abstract\": \"string\",\n            \"authors\": \"[\\\"string\\\"]\",\n            \"doi\": \"string\",\n            \"id\": 8,\n            \"journal\": \"string\",\n            \"keywords\": \"[\\\"string\\\"]\",\n            \"pages\": 0,\n            \"publication_date\": \"Sun, 06 Oct 2024 00:00:00 GMT\",\n            \"title\": \"string\",\n            \"user_id\": 24\n        }\n    ],\n    \"status\": \"success\"\n}\n\n ```\n\n```\n404: \n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-2c0e9772-ebd3-443a-bcea-feeecc748385"
+                    },
+                    {
+                        "name": "Update Article",
+                        "id": "adeddb82-d3f3-4c07-bb6f-91ff71db3c06",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "PUT",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": " {\r\n    \"abstract\": \"This article provides an overview of recent advancements in technology.\",\r\n    \"authors\": [\r\n      \"John Doe\",\r\n      \"Jane Smith\"\r\n    ],\r\n    \"doi\": \"10.1234/tech.2024.001\",\r\n    \"journal\": \"Journal of Technology and Society\",\r\n    \"keywords\": [\r\n      \"Technology\",\r\n      \"Innovation\",\r\n      \"Research\"\r\n    ],\r\n    \"pages\": 10,\r\n    \"publication_date\": \"2024-01-15\",\r\n    \"title\": \"A Study on Modern Technology\"\r\n  }",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles/10",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles",
+                                    "10"
+                                ]
+                            },
+                            "description": "### Update an Existing Article\n\n- **Endpoint**: `/articles/{article_id}`\n    \n- **Method**: `PUT`\n    \n- **Description**: Allows a user to update an existing article by providing updated information for fields such as title, content, keywords, and other relevant details.\n    \n\n#### Request\n\n- **Headers**:\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer // Required: Access token for authorization.`\n        \n- **Path Parameters**:\n    \n    - `article_id: The ID of the article to be updated.`\n        \n- **Request Body**:\n    \n\n```\n{\n    \"abstract\": \"string\",  // Brief summary of the article's content.\n    \"authors\": [           // Array of authors' names.\n        \"string\"\n    ],\n    \"doi\": \"string\",       // Digital Object Identifier for the article.\n    \"journal\": \"string\",   // Name of the journal where the article is published.\n    \"keywords\": [          // Array of keywords related to the article.\n        \"string\"\n    ],\n    \"pages\": 0,            // Total number of pages of the article.\n    \"publication_date\": \"2024-10-06\", // Date when the article was published.\n    \"title\": \"string\"      // Title of the article.\n}\n\n ```\n\n#### Responses:\n\n```\n200:\n{\n    \"data\": {\n        \"article\": {\n            \"abstract\": \"string\",\n            \"authors\": [\n                \"string\"\n            ],\n            \"doi\": \"string\",\n            \"id\": 11,\n            \"journal\": \"string\",\n            \"keywords\": [\n                \"string\"\n            ],\n            \"pages\": 0,\n            \"publication_date\": \"2024-10-06\",\n            \"title\": \"string\"\n        }\n    },\n    \"status\": \"success\"\n}\n\n ```\n\n```\n400:\n{\n    \"message\": \"authors must be an array.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: Article not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-adeddb82-d3f3-4c07-bb6f-91ff71db3c06"
+                    },
+                    {
+                        "name": "Search by fields",
+                        "id": "0596ce9e-c5ac-4b80-a557-4a2a204a6ae3",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles/search/24?query=str&type=keywords",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles",
+                                    "search",
+                                    "24"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "query",
+                                        "value": "str"
+                                    },
+                                    {
+                                        "key": "type",
+                                        "value": "keywords"
+                                    }
+                                ]
+                            },
+                            "description": "### Search for Articles\n\n**Endpoint**: `/articles/search/{user_id}`  \n**Method**: `GET`  \n**Description**: Allows a user to search for scientific articles based on title, keywords, or DOI for a specific user.\n\n#### Request\n\n**Headers**:\n\n- **Content-Type**: `application/json`\n    \n- **Authorization**: `Bearer` // Required: Access token for authorization.\n    \n\n**Path Parameters**:\n\n- **`user_id`**: The ID of the user performing the search.\n    \n\n**Query Parameters**:\n\n- **`query`**: The term to search for in the specified field.\n    \n- **`type`**: The type of search (`title`, `keywords`, or `doi`).\n    \n\n#### Responses:\n\n```\n200:\n{\n    \"data\": {\n        \"articles\": [\n            {\n                \"abstract\": \"string\",\n                \"authors\": [\n                    \"string\"\n                ],\n                \"doi\": \"string\",\n                \"id\": 11,\n                \"journal\": \"string\",\n                \"keywords\": [\n                    \"Technology\",\n                    \"Innovation\",\n                    \"Research\"\n                ],\n                \"pages\": 0,\n                \"publication_date\": \"2024-10-06\",\n                \"title\": \"string\"\n            }\n        ]\n    },\n    \"status\": \"success\"\n}\n\n ```\n\n```\n400:\n{\n    \"message\": \"Both 'query' and 'type' parameters are required.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n400:\n{\n    \"message\": \"Invalid search type. Allowed values are 'title', 'keywords', or 'doi'.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n404:\n{\n    \"message\": \"404 Not Found: User not found.\",\n    \"status\": \"error\"\n}\n\n ```\n\n```\n500:\n{\n    \"error\": \"Internal Server Error\",\n    \"message\": \"message\"\n}\n\n ```"
+                        },
+                        "response": [],
+                        "uid": "23380113-0596ce9e-c5ac-4b80-a557-4a2a204a6ae3"
+                    },
+                    {
+                        "name": "Delete Article",
+                        "id": "aea73db9-c043-4d33-801a-54de4f4db579",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "{{token}}",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{BASE_URL}}/api/articles/1",
+                                "host": [
+                                    "{{BASE_URL}}"
+                                ],
+                                "path": [
+                                    "api",
+                                    "articles",
+                                    "1"
+                                ]
+                            }
+                        },
+                        "response": [],
+                        "uid": "23380113-aea73db9-c043-4d33-801a-54de4f4db579"
+                    }
+                ],
+                "id": "1cb52acb-3d6f-4d5c-bd9c-94958ddf8b55",
+                "description": "The **Articles Collection** is responsible for managing functionalities related to scientific articles in the application. This includes creating, retrieving, updating, and deleting articles. The API utilizes **JWT (JSON Web Tokens)** for authentication and authorization purposes.\n\n## Endpoints Overview\n\n### 1\\. Create a new Article\n\n- **Endpoint:** `/articles`\n    \n- **Method:** `POST`\n    \n- **Description:** Creates a new scientific article by providing necessary information such as title, authors, publication date, keywords, abstract, journal name, DOI, and number of pages. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 2\\. Get All Articles\n\n- **Endpoint:** `/articles`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves a list of all scientific articles stored in the system. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 3\\. Get Articles by User\n\n- **Endpoint:** `/articles/{articleId}`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves detailed information about a specific article identified by its unique ID. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 4\\. Get Articles by User\n\n- **Endpoint:** `/articles/user/{user_id}`\n    \n- **Method:** `GET`\n    \n- **Description:** Retrieves all articles by a specific user ID. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 5\\. Update Article Information\n\n- **Endpoint:** `/articles/{articleId}`\n    \n- **Method:** `PUT`\n    \n- **Description:** Updates the details of an article identified by its unique ID. This endpoint requires the user to be authenticated.\n    \n\n---\n\n### 6\\. Delete User\n\n- **Endpoint:** `/articles/{articleId}`\n    \n- **Method:** `DELETE`**Description:** Deletes a scientific article by its unique ID. This endpoint requires the user to be authenticated.",
+                "uid": "23380113-1cb52acb-3d6f-4d5c-bd9c-94958ddf8b55"
+            }
+        ],
+        "variable": [
+            {
+                "key": "token",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyODIzODUxMywianRpIjoiNzUyNmZmZGItYzllMC00MjIwLThmNzMtZmRkMGFkZmM1MjQ0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OCwibmJmIjoxNzI4MjM4NTEzLCJjc3JmIjoiMzY0NTI5NDAtMWE2ZC00MGE1LWIzMmYtYjVjNDA1YjkzNTc0IiwiZXhwIjoxNzI4MjQyMTEzfQ.kruiw7tbyotzVkaG9PNFbf5h1jcl7xkZIPpiqYZ399s"
+            },
+            {
+                "key": "refresh_token",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyODE3MDQyNSwianRpIjoiZDlmMTMxOTItNmQ5Ni00ZDY3LTkxOTItZDJkYmYyZTZlNTYyIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjgsIm5iZiI6MTcyODE3MDQyNSwiY3NyZiI6ImYzNzgyZGI0LTUxOWMtNGUxMC1iMjJjLTRkMmFiM2NhZjhiOCIsImV4cCI6MTczMDc2MjQyNX0.uTU778DXT0BpE9O2RgAw0xtuv-90bEoFa_yWUmQCr2I"
+            },
+            {
+                "key": "BASE_URL",
+                "value": "http://127.0.0.1:5000"
+            }
+        ]
+    }
+}

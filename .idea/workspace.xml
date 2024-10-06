@@ -249,7 +249,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728245047853</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Readme resources">
+      <option name="closed" value="true" />
+      <created>1728245383134</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1728245383134</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Readme resources">
+      <option name="closed" value="true" />
+      <created>1728245474815</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1728245474815</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
