@@ -19,7 +19,7 @@ class UserService:
     def register_user(self, username, password, first_name='', last_name=''):
         """Register a new user with the given username and password."""
         if self.user_repository.get_user_by_username(username):
-            raise ValueError("User already exists.")  # Raise an error if the user already exists
+            raise Conflict("User already exists.")  # Raise an error if the user already exists
 
         password_hash = generate_password_hash(password)  # Hash the user's password
         user = User(None, username, first_name, last_name, password_hash)  # Create a new User object
@@ -73,5 +73,5 @@ class UserService:
         """Delete a user from the database."""
         user = self.user_repository.get_user_by_id(user_id)  # Fetch the user by ID
         if not user:
-            raise ValueError("User not found.")  # Raise an error if the user does not exist
+            raise NotFound("User not found.")  # Raise an error if the user does not exist
         self.user_repository.delete_user(user_id)  # Persist the deletion in the database

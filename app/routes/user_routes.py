@@ -43,6 +43,7 @@ def register():
     **Response:**
         - `201 Created`: On successful registration with user data and tokens.
         - `400 Bad Request`: If the input is invalid or JSON is not provided.
+        - `409 Conflict`: Username is already taken by another user.
         - `500 Internal Server Error`: For any server-related issues.
     """
     try:
@@ -83,6 +84,8 @@ def register():
         return jsonify({"status": "error", "message": str(e)}), 400
     except TypeError:
         return jsonify({"status": "error", "message": "Invalid input format. JSON is required."}), 400
+    except Conflict as e:
+        return jsonify({"error": str(e)}), 409
     except MySQLError as e:
         return handle_mysql_error(e)
     except Exception as e:
@@ -208,7 +211,7 @@ def update_user(user_id):
         - `200 OK`: User updated successfully.
         - `400 Bad Request`: Validation error or request body issue.
         - `404 Not Found`: User not found.
-        - `404 Not Found`: Username is already taken by another user.
+        - `409 Conflict`: Username is already taken by another user.
         - `500 Internal Server Error`: For server-related issues.
     """
     try:
@@ -259,8 +262,8 @@ def update_password(user_id):
     **Responses:**
         - `200 OK`: Password updated successfully.
         - `400 Bad Request`: Validation error or request body issue.
-        - `404 Not Found`: User not found.
         - `401 Unauthorized`: Old password is incorrect.
+        - `404 Not Found`: User not found.
         - `500 Internal Server Error`: For server-related issues.
     """
     try:
@@ -298,6 +301,45 @@ def update_password(user_id):
         return jsonify({"error": str(e)}), 404
     except MySQLError as e:
         # Handle MySQL-specific errors during the password update operation
+        return handle_mysql_error(e)
+    except Exception as e:
+        # Handle any other exceptions that occur during the process
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+
+@user_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def delete(user_id):
+    """
+    Delete a user by ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Parameters:**
+        - `user_id` (path): ID of the user to be deleted.
+        - `Authorization` (header): Bearer token required to authorize the request.
+
+    **Responses:**
+        - `200 OK`: User deleted successfully.
+        - `400 Bad Request`: Validation error or request issue.
+        - `404 Not Found`: User not found.
+        - `500 Internal Server Error`: For server-related issues.
+    """
+    try:
+        # Attempt to delete the user by calling the user service's delete method
+        user_service.delete_user(user_id)
+
+        # Return a success response if the user is deleted successfully
+        return jsonify({"status": "success", "message": "User deleted successfully."}), 200
+
+    except ValueError as e:
+        # Handle cases where the request may be invalid
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except NotFound as e:
+        return jsonify({"error": str(e)}), 404
+    except MySQLError as e:
+        # Handle MySQL-specific errors during the deletion operation
         return handle_mysql_error(e)
     except Exception as e:
         # Handle any other exceptions that occur during the process
