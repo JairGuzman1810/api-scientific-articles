@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Password and email validations">
-      <change afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Response changes&#10;Create article">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/user_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/article_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/article_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +194,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728222325366</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Response changes&#10;Create article">
+      <option name="closed" value="true" />
+      <created>1728226354092</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1728226354092</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -227,6 +231,7 @@
     <MESSAGE value="Article repositories&#10;Article services" />
     <MESSAGE value="Enhanced how exceptions are handled&#10;Better structure" />
     <MESSAGE value="Password and email validations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Password and email validations" />
+    <MESSAGE value="Response changes&#10;Create article" />
+    <option name="LAST_COMMIT_MESSAGE" value="Response changes&#10;Create article" />
   </component>
 </project>

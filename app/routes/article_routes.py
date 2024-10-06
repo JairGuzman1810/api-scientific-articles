@@ -64,3 +64,34 @@ def create_article():
 
     except Exception as e:
         return handle_common_exceptions(e)  # Use the utility function for common exception handling
+
+
+@article_bp.route('/articles', methods=['GET'])
+@jwt_required()
+def get_articles():
+    """
+    Retrieve a list of articles.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Response:**
+        - `200 OK`: A list of articles retrieved successfully.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        # Retrieve all articles using the article service
+        articles = article_service.get_all_articles()
+
+        # Convert articles to a list of dictionaries for JSON response
+        response_data = {
+            "data": [article.__dict__ for article in articles],  # Convert each article to a dictionary
+            "status": "success"  # Indicate the status of the request
+        }
+
+        # Return the success response with status 200
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)
