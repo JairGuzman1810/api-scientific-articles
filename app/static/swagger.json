@@ -1,0 +1,1623 @@
+{
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {},
+  "info": {
+    "description": "This API is developed as part of a technical test for the Muyal Research Group (MRG) to effectively manage scientific articles and user accounts in a research context. It provides a comprehensive framework for the creation, retrieval, updating, and deletion of scientific articles, enabling researchers to easily maintain their publication records. In addition to article management, the API incorporates user authentication and management features, allowing users to securely register, log in, and maintain their profiles. The implementation of JWT (JSON Web Tokens) ensures robust security for accessing sensitive data. This API also enhances the user experience by offering efficient search functionalities, allowing users to query articles by title, keywords, and DOI, which is crucial for research efficiency. With a layered architecture design, the API emphasizes modularity and maintainability, demonstrating best practices in software development. This project showcases not only the capabilities of the API in managing scholarly data but also the technical proficiency required to build a scalable and secure system for research management.",
+    "title": "Scientific Articles API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/articles": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "A list of articles retrieved successfully.",
+            "schema": {
+              "items": {
+                "properties": {
+                  "abstract": {
+                    "example": "This article provides an overview of recent advancements in technology.",
+                    "type": "string"
+                  },
+                  "authors": {
+                    "example": [
+                      "John Doe",
+                      "Jane Smith"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "doi": {
+                    "example": "10.1234/tech.2024.001",
+                    "type": "string"
+                  },
+                  "id": {
+                    "example": 1,
+                    "type": "integer"
+                  },
+                  "journal": {
+                    "example": "Journal of Technology and Society",
+                    "type": "string"
+                  },
+                  "keywords": {
+                    "example": [
+                      "Technology",
+                      "Innovation",
+                      "Research"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pages": {
+                    "example": 10,
+                    "type": "integer"
+                  },
+                  "publication_date": {
+                    "example": "2024-01-15",
+                    "type": "string"
+                  },
+                  "title": {
+                    "example": "A Comprehensive Study on Modern Technology",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Retrieve a list of articles.",
+        "tags": [
+          "Articles"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "description": "JSON parameters to create a new article. The request body must include:\n- **title** (string): The title of the article. Example: 'A Comprehensive Study on Modern Technology'.\n- **authors** (array of strings): List of authors for the article. Example: ['John Doe', 'Jane Smith'].\n- **publication_date** (string, format: date): The publication date of the article in YYYY-MM-DD format. Example: '2024-01-15'.\n- **keywords** (array of strings): List of keywords related to the article. Example: ['Technology', 'Innovation', 'Research'].\n- **abstract** (string): A brief summary of the article. Example: 'This article provides an overview of recent advancements in technology.'.\n- **journal** (string): The name of the journal where the article is published. Example: 'Journal of Technology and Society'.\n- **doi** (string): The DOI of the article. Example: '10.1234/tech.2024.001'.\n- **pages** (integer, optional): The number of pages in the article. Can be null. Example: 10 or null.\n- **user_id** (integer): The ID of the user who created the article. Example: 7.",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "abstract": {
+                  "type": "string"
+                },
+                "authors": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "doi": {
+                  "type": "string"
+                },
+                "journal": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pages": {
+                  "type": "integer"
+                },
+                "publication_date": {
+                  "format": "date",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article created successfully.",
+            "schema": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "article": {
+                      "properties": {
+                        "abstract": {
+                          "example": "This article provides an overview of recent advancements in technology.",
+                          "type": "string"
+                        },
+                        "authors": {
+                          "example": [
+                            "John Doe",
+                            "Jane Smith"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "doi": {
+                          "example": "10.1234/tech.2024.001",
+                          "type": "string"
+                        },
+                        "id": {
+                          "example": 1,
+                          "type": "integer"
+                        },
+                        "journal": {
+                          "example": "Journal of Technology and Society",
+                          "type": "string"
+                        },
+                        "keywords": {
+                          "example": [
+                            "Technology",
+                            "Innovation",
+                            "Research"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "pages": {
+                          "example": 10,
+                          "type": "integer"
+                        },
+                        "publication_date": {
+                          "example": "2024-01-15",
+                          "type": "string"
+                        },
+                        "title": {
+                          "example": "A Comprehensive Study on Modern Technology",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error or request body issue.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Authors must be an array",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Create a new article.",
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/articles/user/{user_id}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "ID of the user whose articles to retrieve.",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Articles retrieved successfully.",
+            "schema": {
+              "items": {
+                "properties": {
+                  "abstract": {
+                    "example": "This article provides an overview of recent advancements in technology.",
+                    "type": "string"
+                  },
+                  "authors": {
+                    "example": [
+                      "John Doe",
+                      "Jane Smith"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "doi": {
+                    "example": "10.1234/tech.2024.001",
+                    "type": "string"
+                  },
+                  "id": {
+                    "example": 1,
+                    "type": "integer"
+                  },
+                  "journal": {
+                    "example": "Journal of Technology and Society",
+                    "type": "string"
+                  },
+                  "keywords": {
+                    "example": [
+                      "Technology",
+                      "Innovation",
+                      "Research"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pages": {
+                    "example": 10,
+                    "type": "integer"
+                  },
+                  "publication_date": {
+                    "example": "2024-01-15",
+                    "type": "string"
+                  },
+                  "title": {
+                    "example": "A Comprehensive Study on Modern Technology",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "404": {
+            "description": "No articles found for the user.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Retrieve all articles by a specific user ID.",
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/articles/{article_id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID of the article to be deleted.",
+            "in": "path",
+            "name": "article_id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article deleted successfully.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Article deleted successfully",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Article not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error message.",
+                  "example": "404 Not Found: Article not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Delete an article by ID.",
+        "tags": [
+          "Articles"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "description": "ID of the article to retrieve.",
+            "in": "path",
+            "name": "article_id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article retrieved successfully.",
+            "schema": {
+              "properties": {
+                "abstract": {
+                  "example": "This article provides an overview of recent advancements in technology.",
+                  "type": "string"
+                },
+                "authors": {
+                  "example": [
+                    "John Doe",
+                    "Jane Smith"
+                  ],
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "doi": {
+                  "example": "10.1234/tech.2024.001",
+                  "type": "string"
+                },
+                "id": {
+                  "example": 1,
+                  "type": "integer"
+                },
+                "journal": {
+                  "example": "Journal of Technology and Society",
+                  "type": "string"
+                },
+                "keywords": {
+                  "example": [
+                    "Technology",
+                    "Innovation",
+                    "Research"
+                  ],
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pages": {
+                  "example": 10,
+                  "type": "integer"
+                },
+                "publication_date": {
+                  "example": "2024-01-15",
+                  "type": "string"
+                },
+                "title": {
+                  "example": "A Comprehensive Study on Modern Technology",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Article not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "example": "Article not found",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Retrieve a specific article by its ID.",
+        "tags": [
+          "Articles"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "ID of the article to be updated.",
+            "in": "path",
+            "name": "article_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "JSON parameters to update an article.",
+            "in": "body",
+            "name": "article_data",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authors": {
+                  "description": "List of authors for the article.",
+                  "example": [
+                    "John Doe",
+                    "Jane Smith"
+                  ],
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "doi": {
+                  "description": "DOI of the article.",
+                  "example": "10.1000/j.ijai.2024.01",
+                  "type": "string"
+                },
+                "journal": {
+                  "description": "Name of the journal.",
+                  "example": "International Journal of AI",
+                  "type": "string"
+                },
+                "keywords": {
+                  "description": "List of keywords related to the article.",
+                  "example": [
+                    "AI",
+                    "Machine Learning"
+                  ],
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pages": {
+                  "description": "Page numbers of the article.",
+                  "example": 10,
+                  "type": "integer"
+                },
+                "publication_date": {
+                  "description": "Publication date of the article.",
+                  "example": "2024-01-01",
+                  "format": "date",
+                  "type": "string"
+                },
+                "abstract": {
+                  "description": "Summary of the article.",
+                  "example": "This article explores the advancements in AI.",
+                  "type": "string"
+                },
+                "title": {
+                  "description": "New title for the article.",
+                  "example": "The Future of AI",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article updated successfully.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Article updated successfully",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error or request body issue.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Authors must be an array",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Article not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error message.",
+                  "example": "404 Not Found: Article not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Update an article by ID.",
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/articles/search/{user_id}": {
+      "get": {
+        "summary": "Search for scientific articles by title, keywords, or DOI for a specific user.",
+        "parameters": [
+          {
+            "description": "ID of the user performing the search.",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "The term to search for in the specified field.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The type of search (title, keywords, or doi).",
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Articles retrieved successfully with the list of articles.",
+            "schema": {
+              "items": {
+                "properties": {
+                  "abstract": {
+                    "example": "This article provides an overview of recent advancements in technology.",
+                    "type": "string"
+                  },
+                  "authors": {
+                    "example": [
+                      "John Doe",
+                      "Jane Smith"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "doi": {
+                    "example": "10.1234/tech.2024.001",
+                    "type": "string"
+                  },
+                  "id": {
+                    "example": 1,
+                    "type": "integer"
+                  },
+                  "journal": {
+                    "example": "Journal of Technology and Society",
+                    "type": "string"
+                  },
+                  "keywords": {
+                    "example": [
+                      "Technology",
+                      "Innovation",
+                      "Research"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pages": {
+                    "example": 10,
+                    "type": "integer"
+                  },
+                  "publication_date": {
+                    "example": "2024-01-15",
+                    "type": "string"
+                  },
+                  "title": {
+                    "example": "A Comprehensive Study on Modern Technology",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "If the input is invalid or the query parameters are missing.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Invalid input or missing query parameters.",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "For any server-related issues.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/users/login": {
+      "post": {
+        "parameters": [
+          {
+            "description": "JSON parameters to login a user.",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "password": {
+                  "description": "The password for the user.",
+                  "example": "P@ssw0rd",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "The username of the user.",
+                  "example": "johndoe@hotmail.com",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated.",
+            "schema": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "tokens": {
+                      "properties": {
+                        "access_token": {
+                          "description": "JWT access token.",
+                          "type": "string"
+                        },
+                        "refresh_token": {
+                          "description": "JWT refresh token.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "user": {
+                      "properties": {
+                        "first_name": {
+                          "description": "First name of the user.",
+                          "type": "string"
+                        },
+                        "id": {
+                          "description": "User's unique ID.",
+                          "type": "integer"
+                        },
+                        "last_name": {
+                          "description": "Last name of the user.",
+                          "type": "string"
+                        },
+                        "username": {
+                          "description": "Username of the user.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "status": {
+                  "description": "Status of the request.",
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation or input error.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "Request body must be JSON.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Invalid credentials.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "Invalid credentials",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "User login.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/register": {
+      "post": {
+        "parameters": [
+          {
+            "description": "JSON parameters to register a new user. The request body must include:\n- **first_name** (string): The first name of the user. Example: 'John'.\n- **last_name** (string): The last name of the user. Example: 'Doe'.\n- **password** (string): The password for the user. Example: 'P@ssw0rd'.\n- **username** (string): The unique username for the user. Example: 'johndoe@hotmail.com'.",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "first_name": {
+                  "description": "The first name of the new user.",
+                  "example": "John",
+                  "type": "string"
+                },
+                "last_name": {
+                  "description": "The last name of the new user.",
+                  "example": "Doe",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "The password for the new user.",
+                  "example": "P@ssw0rd",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "The username of the new user. Must be unique.",
+                  "example": "johndoe@hotmail.com",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully registered.",
+            "schema": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "tokens": {
+                      "properties": {
+                        "access_token": {
+                          "description": "JWT access token, used for authenticated requests.",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                          "type": "string"
+                        },
+                        "refresh_token": {
+                          "description": "JWT refresh token, used to obtain new access tokens.",
+                          "example": "dXNlcm5hbWU6dG9rZW4tc2VjcmV0LS4uLg==",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "user": {
+                      "properties": {
+                        "first_name": {
+                          "description": "The first name of the registered user.",
+                          "example": "John",
+                          "type": "string"
+                        },
+                        "id": {
+                          "description": "The unique ID of the registered user.",
+                          "example": 1,
+                          "type": "integer"
+                        },
+                        "last_name": {
+                          "description": "The last name of the registered user.",
+                          "example": "Doe",
+                          "type": "string"
+                        },
+                        "username": {
+                          "description": "The username of the registered user.",
+                          "example": "johndoe@hotmail.com",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "status": {
+                  "description": "Status of the request, indicating success.",
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation or input error, such as missing required fields.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Detailed error message explaining what went wrong.",
+                  "example": "Request body must be JSON.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "409": {
+            "description": "Conflict. Username is already taken by another user.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message explaining the conflict.",
+                  "example": "409 Conflict: Username is already taken by another user.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error. An unexpected error occurred on the server.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "The type of error encountered.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Detailed error message explaining the cause of the issue.",
+                  "example": "Something went wrong on our end.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Register a new user.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/token": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "New access token generated successfully.",
+            "schema": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "tokens": {
+                      "properties": {
+                        "access_token": {
+                          "description": "New JWT access token.",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "status": {
+                  "description": "Status of the request.",
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Missing or invalid refresh token.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "Missing or invalid refresh token.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Refresh access token using a refresh token.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{user_id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID of the user to be deleted.",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "User deleted successfully.",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error or request issue.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "Invalid request.",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error message.",
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Delete a user by ID.",
+        "tags": [
+          "Users"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "ID of the user to be updated.",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "JSON parameters to update a user.",
+            "in": "body",
+            "name": "user_data",
+            "required": true,
+            "schema": {
+              "properties": {
+                "first_name": {
+                  "description": "New first name for the user.",
+                  "example": "John",
+                  "type": "string"
+                },
+                "last_name": {
+                  "description": "New last name for the user.",
+                  "example": "Doe",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "New username for the user.",
+                  "example": "johndoe@hotmail.com",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "User updated successfully",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "successs",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error or request body issue.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Request body must be JSON.",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error message.",
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "409": {
+            "description": "Conflict. Username is already taken by another user.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "409 Conflict: Username is already taken by another user.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Update a user by ID.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{user_id}/password": {
+      "put": {
+        "parameters": [
+          {
+            "description": "ID of the user whose password is to be updated.",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "description": "JSON parameters to update a user's password.",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "new_password": {
+                  "description": "The new password for the user.",
+                  "example": "NewP@ssw0rd",
+                  "type": "string"
+                },
+                "old_password": {
+                  "description": "The current password of the user.",
+                  "example": "OldP@ssw0rd",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password updated successfully.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "example": "Password updated successfully",
+                  "type": "string"
+                },
+                "status": {
+                  "example": "success",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error or request body issue.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "Missing required fields: old_password, new_password",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Error message.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Old password is incorrect.",
+            "schema": {
+              "properties": {
+                "message": {
+                  "description": "Error message.",
+                  "example": "401 Unauthorized: Old password is incorrect.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Error message.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error message.",
+                  "example": "404 Not Found: User not found.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the request, indicating an error.",
+                  "example": "error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "Error type.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Error message.",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Update a user's password.",
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey",
+      "description": "Bearer token for authentication. Format: Bearer {token}"
+    }
+  },
+  "swagger": "2.0"
+}

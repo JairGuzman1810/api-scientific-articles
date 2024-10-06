@@ -1,3 +1,5 @@
+import re
+
 from flask import request  # Import the request object from Flask
 
 
@@ -25,9 +27,6 @@ def validate_json_and_required_fields(required_fields):
             f"Missing required fields: {', '.join(missing_fields)}")  # Raise an error listing the missing fields
 
     return data  # Return the parsed JSON data if all validations pass
-
-
-import re
 
 
 def validate_username_and_password(username=None, password=None):

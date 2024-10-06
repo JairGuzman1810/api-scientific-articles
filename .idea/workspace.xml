@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Readme resources">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Delete article">
+      <change afterPath="$PROJECT_DIR$/app/static/swagger.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/swagger_config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/article_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/validations.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/validations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/swagger.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/resources/swagger.PNG" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +68,7 @@
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\app\static" />
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\resources" />
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\app\repositories" />
     </key>
@@ -276,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728246983349</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Delete article">
+      <option name="closed" value="true" />
+      <created>1728248145254</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1728248145255</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -312,6 +325,7 @@
     <MESSAGE value="Update article" />
     <MESSAGE value="Search by fields" />
     <MESSAGE value="Readme resources" />
-    <option name="LAST_COMMIT_MESSAGE" value="Readme resources" />
+    <MESSAGE value="Delete article" />
+    <option name="LAST_COMMIT_MESSAGE" value="Delete article" />
   </component>
 </project>
