@@ -129,3 +129,38 @@ def get_article(article_id):
     except Exception as e:
         # Handle any exceptions using the common exception handler
         return handle_common_exceptions(e)
+
+
+@article_bp.route('/articles/user/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_articles_by_user(user_id):
+    """
+    Retrieve all articles by a specific user ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Parameters:**
+        - `user_id`: int, required - ID of the user whose articles to retrieve.
+
+    **Responses:**
+        - `200 OK`: A list of articles retrieved successfully.
+        - `404 Not Found`: User not found.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        # Retrieve all articles associated with the given user ID using the article service
+        articles = article_service.get_articles_by_user_id(user_id)
+
+        # Prepare the response data
+        response_data = {
+            "data": [article.__dict__ for article in articles] if articles else [],
+            # Convert articles to a dictionary, or return empty list
+            "status": "success"  # Indicate the status of the request
+        }
+
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)

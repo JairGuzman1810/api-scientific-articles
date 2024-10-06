@@ -46,6 +46,12 @@ class ArticleService:
 
     def get_articles_by_user_id(self, user_id):
         """Fetch all articles associated with a specific user ID."""
+
+        # Check if the user exists
+        user = self.user_repository.get_user_by_id(user_id)  # Fetch user by ID
+        if not user:
+            raise NotFound("User not found.")  # Raise NotFound if the user does not exist
+
         return self.article_repository.get_articles_by_user_id(user_id)  # Fetch articles by user ID
 
     def update_article(self, article_id, article_data):
