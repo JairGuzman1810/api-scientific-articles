@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Update article">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Search by fields">
+      <change afterPath="$PROJECT_DIR$/resources/db_schema.PNG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/repositories/article_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/repositories/article_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/article_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/article_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/article_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +64,7 @@
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\resources" />
       <recent name="C:\Users\jair\PycharmProjects\api-scientific-articles\app\repositories" />
     </key>
   </component>
@@ -237,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728236194834</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Search by fields">
+      <option name="closed" value="true" />
+      <created>1728240776797</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1728240776797</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -271,6 +278,7 @@
     <MESSAGE value="Get article" />
     <MESSAGE value="Get article by user" />
     <MESSAGE value="Update article" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update article" />
+    <MESSAGE value="Search by fields" />
+    <option name="LAST_COMMIT_MESSAGE" value="Search by fields" />
   </component>
 </project>
