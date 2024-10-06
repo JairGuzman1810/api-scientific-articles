@@ -1,32 +1,15 @@
-import os
-import re
-
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
-from mysql.connector import Error as MySQLError
-from werkzeug.exceptions import NotFound, Conflict
+from flask import Blueprint, jsonify
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from werkzeug.exceptions import Unauthorized
 from werkzeug.security import check_password_hash
 
 from app.services.user_service import UserService
+from app.utils.error_handling import handle_common_exceptions
+from app.utils.tokens import generate_tokens
+from app.utils.validations import validate_json_and_required_fields
 
 user_bp = Blueprint('user', __name__)
 user_service = UserService()
-
-
-def handle_mysql_error(e):
-    """Handle MySQL errors and return appropriate messages."""
-    if e.errno == 1146:  # Table doesn't exist
-        if os.getenv('FLASK_ENV') == 'development':
-            table_name = extract_table_name(e.msg)
-            return jsonify({"status": "error",
-                            "message": f"A database table '{table_name}' is missing. Please check your database setup."}), 500
-    return jsonify({"status": "error", "message": "Internal Server Error"}), 500
-
-
-def extract_table_name(error_message):
-    """Extract the table name from the MySQL error message."""
-    match = re.search(r"Table '.*?\.(.*?)' doesn't exist", error_message)
-    return match.group(1) if match else "unknown_table"
 
 
 @user_bp.route('/users/register', methods=['POST'])
@@ -37,8 +20,8 @@ def register():
     **Request Body Parameters:**
         - `username`: str, required - Unique username for the new user.
         - `password`: str, required - Password for the new user.
-        - `first_name`: str, optional - User's first name.
-        - `last_name`: str, optional - User's last name.
+        - `first_name`: str, required - User's first name.
+        - `last_name`: str, required - User's last name.
 
     **Response:**
         - `201 Created`: On successful registration with user data and tokens.
@@ -47,21 +30,19 @@ def register():
         - `500 Internal Server Error`: For any server-related issues.
     """
     try:
-        data = request.json
-        if data is None:
-            raise ValueError("Request body must be JSON.")
+        # Validate that the request is JSON and contains the required fields
+        data = validate_json_and_required_fields(['username', 'password', 'first_name', 'last_name'])
 
         # Register a new user with the provided details
         user = user_service.register_user(
             data['username'],
             data['password'],
-            data.get('first_name', ''),
-            data.get('last_name', '')
+            data['first_name'],
+            data['last_name']
         )
 
-        # Create JWT tokens for the new user
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        # Generate JWT tokens for the new user
+        tokens = generate_tokens(user.id)
 
         # Return success response with user data and tokens
         return jsonify({
@@ -73,23 +54,12 @@ def register():
                     "first_name": user.first_name,
                     "last_name": user.last_name
                 },
-                "tokens": {
-                    "access_token": access_token,
-                    "refresh_token": refresh_token
-                }
+                "tokens": tokens  # Use the generated tokens dictionary
             }
         }), 201
 
-    except ValueError as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
-    except TypeError:
-        return jsonify({"status": "error", "message": "Invalid input format. JSON is required."}), 400
-    except Conflict as e:
-        return jsonify({"error": str(e)}), 409
-    except MySQLError as e:
-        return handle_mysql_error(e)
     except Exception as e:
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        return handle_common_exceptions(e)  # Use the utility function for common exception handling
 
 
 @user_bp.route('/users/login', methods=['POST'])
@@ -108,47 +78,31 @@ def login():
         - `500 Internal Server Error`: For any server-related issues.
     """
     try:
-        data = request.json
-        if data is None:
-            raise ValueError("Request body must be JSON.")
+        # Validate that the request is JSON and contains the required fields
+        data = validate_json_and_required_fields(['username', 'password'])
 
         # Authenticate the user with the provided credentials
         user = user_service.authenticate_user(data['username'], data['password'])
 
-        # Check if user is authenticated successfully
-        if user:
-            # Create JWT tokens for the authenticated user
-            access_token = create_access_token(identity=user.id)
-            refresh_token = create_refresh_token(identity=user.id)
+        # Generate JWT tokens for the authenticated user
+        tokens = generate_tokens(user.id)
 
-            # Return success response with user data and tokens
-            return jsonify({
-                "status": "success",
-                "data": {
-                    "user": {
-                        "id": user.id,
-                        "username": user.username,
-                        "first_name": user.first_name,
-                        "last_name": user.last_name
-                    },
-                    "tokens": {
-                        "access_token": access_token,
-                        "refresh_token": refresh_token
-                    }
-                }
-            }), 200
+        # Return success response with user data and tokens
+        return jsonify({
+            "status": "success",
+            "data": {
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name
+                },
+                "tokens": tokens  # Use the generated tokens dictionary
+            }
+        }), 200
 
-        # Return error response if credentials are invalid
-        return jsonify({"status": "error", "message": "Invalid credentials"}), 401
-
-    except ValueError as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
-    except TypeError:
-        return jsonify({"status": "error", "message": "Invalid input format. JSON is required."}), 400
-    except MySQLError as e:
-        return handle_mysql_error(e)
     except Exception as e:
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        return handle_common_exceptions(e)  # Use the utility function for common exception handling
 
 
 @user_bp.route('/users/token', methods=['POST'])
@@ -187,7 +141,7 @@ def refresh():
 
     except Exception as e:
         # Handle any exceptions that occur during the token creation process
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        return handle_common_exceptions(e)  # Use the utility function for common exception handling
 
 
 @user_bp.route('/users/<int:user_id>', methods=['PUT'])
@@ -215,12 +169,9 @@ def update_user(user_id):
         - `500 Internal Server Error`: For server-related issues.
     """
     try:
-        # Retrieve the JSON data from the request body
-        data = request.json
 
-        # Check if the request body is empty or not JSON
-        if data is None:
-            raise ValueError("Request body must be JSON.")
+        # Validate that the required fields are present
+        data = validate_json_and_required_fields(['username', 'first_name', 'last_name'])
 
         # Update the user information by passing the entire data to the user service
         user_service.update_user(user_id, data)  # Pass the entire data for update
@@ -228,19 +179,9 @@ def update_user(user_id):
         # Return a success response indicating that the user has been updated
         return jsonify({"message": "User updated successfully"}), 200
 
-    except ValueError as e:
-        # Handle cases where the request body is not valid JSON
-        return jsonify({"error": str(e)}), 400
-    except NotFound as e:
-        return jsonify({"error": str(e)}), 404
-    except Conflict as e:
-        return jsonify({"error": str(e)}), 409
-    except MySQLError as e:
-        # Handle MySQL-specific errors during the update operation
-        return handle_mysql_error(e)
     except Exception as e:
-        # Handle any other exceptions that occur during the process
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        # Use the common exception handler for all exceptions
+        return handle_common_exceptions(e)
 
 
 @user_bp.route('/users/<int:user_id>/password', methods=['PUT'])
@@ -267,44 +208,24 @@ def update_password(user_id):
         - `500 Internal Server Error`: For server-related issues.
     """
     try:
-        # Retrieve the JSON data from the request body
-        data = request.json
-
-        # Check if the request body is empty or not JSON
-        if data is None:
-            raise ValueError("Request body must be JSON.")
-
-        # Extract old and new passwords from the request body
-        old_password = data.get('old_password')
-        new_password = data.get('new_password')
-
-        # Ensure both old and new passwords are provided
-        if not old_password or not new_password:
-            raise ValueError("Both old and new passwords are required.")
+        # Validate that the request is JSON and contains the required fields
+        data = validate_json_and_required_fields(['old_password', 'new_password'])
 
         # Fetch the user by ID
         user = user_service.get_user_by_id(user_id)
 
         # Verify that the old password matches the stored password
-        if user and check_password_hash(user.password_hash, old_password):
+        if user and check_password_hash(user.password_hash, data['old_password']):
             # Update the user's password if verification is successful
-            user_service.update_user_password(user_id, new_password)
+            user_service.update_user_password(user_id, data['new_password'])
             return jsonify({"message": "Password updated successfully"}), 200
 
-        # Return an error if the old password is incorrect
-        return jsonify({"error": "Old password is incorrect"}), 401
+        # Raise an UnauthorizedError if the old password is incorrect
+        raise Unauthorized("Old password is incorrect")
 
-    except ValueError as e:
-        # Handle cases where the request body is not valid JSON
-        return jsonify({"error": str(e)}), 400
-    except NotFound as e:
-        return jsonify({"error": str(e)}), 404
-    except MySQLError as e:
-        # Handle MySQL-specific errors during the password update operation
-        return handle_mysql_error(e)
     except Exception as e:
-        # Handle any other exceptions that occur during the process
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        # Use the common exception handler for all exceptions
+        return handle_common_exceptions(e)
 
 
 @user_bp.route('/users/<int:user_id>', methods=['DELETE'])
@@ -333,14 +254,6 @@ def delete(user_id):
         # Return a success response if the user is deleted successfully
         return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 
-    except ValueError as e:
-        # Handle cases where the request may be invalid
-        return jsonify({"status": "error", "message": str(e)}), 400
-    except NotFound as e:
-        return jsonify({"error": str(e)}), 404
-    except MySQLError as e:
-        # Handle MySQL-specific errors during the deletion operation
-        return handle_mysql_error(e)
     except Exception as e:
-        # Handle any other exceptions that occur during the process
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        # Use the common exception handler for all exceptions
+        return handle_common_exceptions(e)

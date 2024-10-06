@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Delete user">
-      <change afterPath="$PROJECT_DIR$/app/repositories/article_repository.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/article_service.py" afterDir="false" />
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Article repositories&#10;Article services">
+      <change afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/error_handling.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/tokens.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/validations.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/articles.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/article.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/user_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/user_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/user_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728176623767</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Article repositories&#10;Article services">
+      <option name="closed" value="true" />
+      <created>1728192535538</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1728192535538</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -199,6 +211,7 @@
     <MESSAGE value="User update" />
     <MESSAGE value="Update password" />
     <MESSAGE value="Delete user" />
-    <option name="LAST_COMMIT_MESSAGE" value="Delete user" />
+    <MESSAGE value="Article repositories&#10;Article services" />
+    <option name="LAST_COMMIT_MESSAGE" value="Article repositories&#10;Article services" />
   </component>
 </project>

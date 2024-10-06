@@ -1,4 +1,4 @@
-from werkzeug.exceptions import NotFound, Conflict
+from werkzeug.exceptions import NotFound, Conflict, Unauthorized
 from werkzeug.security import generate_password_hash, check_password_hash  # Import functions for password hashing
 
 from app.models.user import User  # Import the User model to work with user data
@@ -30,7 +30,7 @@ class UserService:
         user = self.user_repository.get_user_by_username(username)  # Fetch the user by username
         if user and check_password_hash(user.password_hash, password):  # Verify the password
             return user  # Return the authenticated user
-        return None  # Return None if authentication fails
+        raise Unauthorized("Invalid Credentials.")  # Raise Unauthorized if authentication fails
 
     def update_user(self, user_id, user_data):
         """Update an existing user's details based on provided user_data."""
