@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Response changes&#10;Create article">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Get articles">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/article_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +203,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728226354092</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Get articles">
+      <option name="closed" value="true" />
+      <created>1728228763352</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1728228763352</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -232,6 +241,7 @@
     <MESSAGE value="Enhanced how exceptions are handled&#10;Better structure" />
     <MESSAGE value="Password and email validations" />
     <MESSAGE value="Response changes&#10;Create article" />
-    <option name="LAST_COMMIT_MESSAGE" value="Response changes&#10;Create article" />
+    <MESSAGE value="Get articles" />
+    <option name="LAST_COMMIT_MESSAGE" value="Get articles" />
   </component>
 </project>

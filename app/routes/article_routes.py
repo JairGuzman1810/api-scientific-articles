@@ -95,3 +95,37 @@ def get_articles():
     except Exception as e:
         # Handle any exceptions using the common exception handler
         return handle_common_exceptions(e)
+
+
+@article_bp.route('/articles/<int:article_id>', methods=['GET'])
+@jwt_required()
+def get_article(article_id):
+    """
+    Retrieve a specific article by its ID.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Parameters:**
+        - `article_id`: int, required - ID of the article to retrieve.
+
+    **Responses:**
+        - `200 OK`: On successful retrieval of the article.
+        - `404 Not Found`: If the article with the given ID does not exist.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        # Retrieve the article by its ID using the article service
+        article = article_service.get_article_by_id(article_id)
+
+        # Prepare the response data
+        response_data = {
+            "data": article.__dict__,  # Convert the article to a dictionary
+            "status": "success"  # Indicate the status of the request
+        }
+
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)
