@@ -5,6 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 from mysql.connector import Error as MySQLError
 from werkzeug.exceptions import NotFound, Conflict
+from werkzeug.security import check_password_hash
 
 from app.services.user_service import UserService
 
@@ -233,6 +234,70 @@ def update_user(user_id):
         return jsonify({"error": str(e)}), 409
     except MySQLError as e:
         # Handle MySQL-specific errors during the update operation
+        return handle_mysql_error(e)
+    except Exception as e:
+        # Handle any other exceptions that occur during the process
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+
+@user_bp.route('/users/<int:user_id>/password', methods=['PUT'])
+@jwt_required()
+def update_password(user_id):
+    """
+    Update a user's password.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Parameters:**
+        - `user_id` (path): ID of the user whose password is to be updated.
+        - `Authorization` (header): Bearer token required to authorize the request.
+        - `body` (JSON): Parameters to update a user's password, including:
+            - `old_password`: The current password of the user (string).
+            - `new_password`: The new password for the user (string).
+
+    **Responses:**
+        - `200 OK`: Password updated successfully.
+        - `400 Bad Request`: Validation error or request body issue.
+        - `404 Not Found`: User not found.
+        - `401 Unauthorized`: Old password is incorrect.
+        - `500 Internal Server Error`: For server-related issues.
+    """
+    try:
+        # Retrieve the JSON data from the request body
+        data = request.json
+
+        # Check if the request body is empty or not JSON
+        if data is None:
+            raise ValueError("Request body must be JSON.")
+
+        # Extract old and new passwords from the request body
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+
+        # Ensure both old and new passwords are provided
+        if not old_password or not new_password:
+            raise ValueError("Both old and new passwords are required.")
+
+        # Fetch the user by ID
+        user = user_service.get_user_by_id(user_id)
+
+        # Verify that the old password matches the stored password
+        if user and check_password_hash(user.password_hash, old_password):
+            # Update the user's password if verification is successful
+            user_service.update_user_password(user_id, new_password)
+            return jsonify({"message": "Password updated successfully"}), 200
+
+        # Return an error if the old password is incorrect
+        return jsonify({"error": "Old password is incorrect"}), 401
+
+    except ValueError as e:
+        # Handle cases where the request body is not valid JSON
+        return jsonify({"error": str(e)}), 400
+    except NotFound as e:
+        return jsonify({"error": str(e)}), 404
+    except MySQLError as e:
+        # Handle MySQL-specific errors during the password update operation
         return handle_mysql_error(e)
     except Exception as e:
         # Handle any other exceptions that occur during the process

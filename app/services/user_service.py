@@ -57,7 +57,7 @@ class UserService:
         """Update a user's password."""
         user = self.user_repository.get_user_by_id(user_id)  # Fetch the user by ID
         if not user:
-            raise ValueError("User not found.")  # Raise an error if the user does not exist
+            raise NotFound("User not found.")  # Raise an error if the user does not exist
 
         user.password_hash = generate_password_hash(new_password)  # Hash the new password
         self.user_repository.update_user(user)  # Persist the user with the updated password
@@ -66,7 +66,7 @@ class UserService:
         """Fetch a user from the database using the user ID."""
         user = self.user_repository.get_user_by_id(user_id)  # Fetch the user by ID
         if not user:
-            raise ValueError("User not found.")  # Raise an error if the user does not exist
+            raise NotFound("User not found.")  # Raise an error if the user does not exist
         return user  # Return the found user
 
     def delete_user(self, user_id):
