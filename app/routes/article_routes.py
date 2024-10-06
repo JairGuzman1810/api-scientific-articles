@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 
 from app.services.article_service import ArticleService
@@ -166,6 +166,51 @@ def get_articles_by_user(user_id):
         return handle_common_exceptions(e)
 
 
+@article_bp.route('/articles/search/<int:user_id>', methods=['GET'])
+@jwt_required()
+def search_articles(user_id):
+    """
+    Search for scientific articles by title, keywords, or DOI for a specific user.
+
+    **Security:**
+        - Requires a valid bearer token for authentication.
+
+    **Path Parameters:**
+        - `user_id`: int, required - ID of the user performing the search.
+
+    **Query Parameters:**
+        - `query`: str, required - The term to search for in the specified field.
+        - `type`: str, required - The type of search ('title', 'keywords', or 'doi').
+
+    **Response:**
+        - `200 OK`: Articles retrieved successfully with the list of articles.
+        - `400 Bad Request`: If the input is invalid or the query parameters are missing.
+        - `404 Not Found`: User not found.
+        - `500 Internal Server Error`: For any server-related issues.
+    """
+    try:
+        # Retrieve query parameters
+        search_term = request.args.get('query')  # Get the search term from query parameters
+        search_type = request.args.get('type')  # Get the search type from query parameters
+
+        # Search for articles using the article service
+        articles = article_service.search_articles(user_id, search_term, search_type)
+
+        # Prepare the response data
+        response_data = {
+            "status": "success",
+            "data": {"articles": [article.__dict__ for article in articles]}
+            # Convert Article instances to dictionaries
+        }
+
+        # Return the success response with status 200
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)
+
+
 @article_bp.route('/articles/<int:article_id>', methods=['PUT'])
 @jwt_required()
 def update_article(article_id):
@@ -217,4 +262,5 @@ def update_article(article_id):
         return jsonify(response_data), 200
 
     except Exception as e:
-        return handle_common_exceptions(e)  # Use the utility function for common exception handling
+        # Handle any exceptions using the common exception handler
+        return handle_common_exceptions(e)

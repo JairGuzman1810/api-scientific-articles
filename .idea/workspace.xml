@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Get article by user">
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Update article">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/repositories/article_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/repositories/article_repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/article_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/article_routes.py" afterDir="false" />
@@ -229,7 +229,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728232367501</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Update article">
+      <option name="closed" value="true" />
+      <created>1728236194834</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1728236194834</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,6 +270,7 @@
     <MESSAGE value="Get articles" />
     <MESSAGE value="Get article" />
     <MESSAGE value="Get article by user" />
-    <option name="LAST_COMMIT_MESSAGE" value="Get article by user" />
+    <MESSAGE value="Update article" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update article" />
   </component>
 </project>

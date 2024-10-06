@@ -1,6 +1,7 @@
 import json  # Import the JSON library for converting lists to JSON strings
 
 import mysql.connector  # Import the MySQL connector library to interact with the MySQL database
+from werkzeug.exceptions import BadRequest
 
 from app.config import Config  # Import the configuration settings
 from app.models.article import Article  # Import the Article model to work with article data
@@ -76,6 +77,33 @@ class ArticleRepository:
         if results:
             return [Article(*article) for article in results]  # Convert each result into an Article instance
         return None  # Return None if no articles found
+
+    def search_articles(self, user_id, search_term, search_type):
+        """
+        Search for scientific articles by title, keywords, or DOI based on the search type.
+        """
+        search_query = f"%{search_term}%"  # Prepare the search term for partial matching
+
+        if search_type == "title":
+            query = "SELECT * FROM scientific_articles WHERE user_id = %s AND title LIKE %s"
+            params = (user_id, search_query)
+        elif search_type == "doi":
+            query = "SELECT * FROM scientific_articles WHERE user_id = %s AND doi LIKE %s"
+            params = (user_id, search_query)
+        elif search_type == "keywords":
+            query = """
+                SELECT * FROM scientific_articles
+                WHERE user_id = %s AND JSON_UNQUOTE(keywords) LIKE %s
+            """
+            params = (user_id, search_query)  # Use the search query for partial match
+        else:
+            raise BadRequest("Invalid search type. Use 'title', 'keywords', or 'doi'.")
+
+        self.cursor.execute(query, params)  # Execute the appropriate query
+        results = self.cursor.fetchall()  # Fetch all results matching the search criteria
+        if results:
+            return [Article(*article) for article in results]  # Convert each result into an Article instance
+        return []  # Return an empty list if no articles found
 
     def update_article(self, article_id, article):
         """Update an existing article's information in the database."""

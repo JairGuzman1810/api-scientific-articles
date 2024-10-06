@@ -54,6 +54,25 @@ class ArticleService:
 
         return self.article_repository.get_articles_by_user_id(user_id)  # Fetch articles by user ID
 
+    def search_articles(self, user_id, search_term, search_type):
+        """Search for articles based on a given search term, type, and user ID."""
+
+        # Check if the user exists
+        user = self.user_repository.get_user_by_id(user_id)  # Fetch user by ID
+        if not user:
+            raise NotFound("User not found.")  # Raise NotFound if the user does not exist
+
+        # Validate search type
+        if search_type not in ['title', 'keywords', 'doi']:
+            raise ValueError("Invalid search type. Allowed values are 'title', 'keywords', or 'doi'.")
+
+        # Validate search term
+        if not search_term:
+            raise ValueError("Search term is required.")
+
+        # Call the repository's search function
+        return self.article_repository.search_articles(user_id, search_term, search_type)
+
     def update_article(self, article_id, article_data):
         """Update an existing article's details based on provided article_data."""
         # Fetch the article by ID to check if it exists
