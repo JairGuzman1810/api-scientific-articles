@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Redirect, Tabs } from "expo-router";
+import { Link, Redirect, Tabs, useSegments } from "expo-router";
 import React from "react";
-import { Pressable } from "react-native";
+import { Image, Pressable, View } from "react-native";
 
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
 import { useColorScheme } from "@/src/components/useColorScheme";
@@ -18,6 +18,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const segment = useSegments();
 
   const { isAuth } = useAuth();
 
@@ -25,12 +26,12 @@ export default function TabLayout() {
     return <Redirect href={"/(auth)"} />;
   }
 
+  console.log(segment);
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
       }}
     >
@@ -38,13 +39,26 @@ export default function TabLayout() {
         name="articles"
         options={{
           title: "Articles",
+          headerTitleStyle: {
+            fontFamily: "Nunito-Semibold",
+            color: "#57BBBF",
+          },
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          headerLeft: () => (
+            <View style={{ marginLeft: 15 }}>
+              <Image
+                source={require("../../assets/images/logo.png")} // Replace with your image URL
+                style={{ width: 40, height: 40, resizeMode: "contain" }}
+              />
+            </View>
+          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="info-circle"
+                    name="plus-circle"
                     size={25}
                     color={Colors[colorScheme ?? "light"].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -59,7 +73,20 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
+          headerTitleStyle: {
+            fontFamily: "Nunito-Semibold",
+            color: "#57BBBF",
+          },
+          headerTitleAlign: "center",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerLeft: () => (
+            <View style={{ marginLeft: 15 }}>
+              <Image
+                source={require("../../assets/images/logo.png")} // Replace with your image URL
+                style={{ width: 40, height: 40, resizeMode: "contain" }}
+              />
+            </View>
+          ),
         }}
       />
     </Tabs>

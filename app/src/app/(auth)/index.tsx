@@ -7,7 +7,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 export default function StartScreen() {
   const { isAuth } = useAuth();
 
-  if (!isAuth) {
+  if (isAuth) {
     return <Redirect href={"/articles"} />;
   }
 
@@ -36,7 +36,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
-  image: {},
+  image: {
+    width: 200,
+    aspectRatio: 1,
+    resizeMode: "contain",
+  },
   title: {
     fontSize: 25,
     lineHeight: 32,
