@@ -24,7 +24,7 @@ This project is a **Scientific Articles Management API**, developed as part of a
 The API is accessible through the following base URL:
 
 - For local development: `http://localhost:5000/api`
-- For production: `TODO`
+- For production: `https://api-scientific-articles.vercel.app/`
 
 ## Authentication
 This API uses JWT (JSON Web Tokens) for secure authentication. Users must obtain an access token by logging in. The token must be included in the `Authorization` header as a Bearer token for routes that require authentication.
