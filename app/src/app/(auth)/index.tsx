@@ -7,7 +7,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 export default function StartScreen() {
   const { isAuth } = useAuth();
 
-  if (isAuth) {
+  if (!isAuth) {
     return <Redirect href={"/articles"} />;
   }
 

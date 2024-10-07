@@ -5,7 +5,7 @@ import {
   useQueryErrorResetBoundary,
 } from "@tanstack/react-query";
 import { Alert } from "react-native";
-import { login } from "../api/users/api"; // Import the login function
+import { login, register } from "../api/users/api"; // Import the login function
 import useAuth from "./useAuth"; // Use your auth context or provider
 
 export const useLogin = () => {
@@ -38,6 +38,67 @@ export const useLogin = () => {
             "Login Failed",
             "The user does not exist or the password is incorrect."
           );
+        } else if (error.response.status === 500) {
+          Alert.alert(
+            "Error",
+            "An unexpected error occurred. Please try again later."
+          );
+        } else {
+          Alert.alert("Error", "An error occurred. Please try again.");
+        }
+      } else if (error.request) {
+        Alert.alert("Network Error", "Please check your internet connection.");
+      } else {
+        Alert.alert("Unexpected Error", "An unexpected error occurred.");
+      }
+    },
+  });
+};
+
+export const useRegister = () => {
+  const { reset } = useQueryErrorResetBoundary(); // Reset error boundary
+  const { handleLogin } = useAuth(); // Use your auth context
+  const queryClient = useQueryClient(); // Initialize query client
+
+  return useMutation<
+    Auth,
+    any,
+    {
+      first_name: string;
+      last_name: string;
+      username: string;
+      password: string;
+    }
+  >({
+    mutationFn: async ({ first_name, last_name, username, password }) => {
+      try {
+        const result = await register(
+          first_name,
+          last_name,
+          username,
+          password
+        ); // Call the register function
+        return result; // Return the result from the register function
+      } catch (error) {
+        throw error; // Rethrow the error for handling
+      }
+    },
+    onSuccess: async (data) => {
+      // Upon successful registration
+      await queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user data
+      handleLogin(data); // Handle login (e.g., set user context)
+    },
+    onError: async (error: any) => {
+      // Resetting error handling state
+      reset();
+
+      // Handling various error scenarios
+      if (error.response) {
+        if (error.response.status === 409) {
+          Alert.alert(
+            "Registration Failed",
+            "The email address is already in use. Please use a different email."
+          ); // Handling email already exists
         } else if (error.response.status === 500) {
           Alert.alert(
             "Error",

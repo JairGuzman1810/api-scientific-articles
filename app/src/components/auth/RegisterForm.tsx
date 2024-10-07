@@ -4,6 +4,8 @@ import {
   validateLastName,
   validatePassword,
 } from "@/src/helpers/userUtils";
+import { useRegister } from "@/src/hooks/useUsers";
+import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Button from "../ui/Button";
@@ -12,27 +14,29 @@ import Input from "../ui/Input";
 export default function RegisterForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [firstNameError, setFirstNameError] = useState<string | null>(null);
   const [lastNameError, setLastNameError] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate: register, isPending } = useRegister();
+  const router = useRouter();
 
-  const lastNameInputRef = useRef<TextInput>(null); // Ref for the password input
-  const emailInputRef = useRef<TextInput>(null); // Ref for the password input
-  const passwordInputRef = useRef<TextInput>(null); // Ref for the password input
+  const lastNameInputRef = useRef<TextInput>(null);
+  const usernameInputRef = useRef<TextInput>(null);
+  const passwordInputRef = useRef<TextInput>(null);
 
   const handleRegister = () => {
-    // If validation passes, you can proceed with the login logic here
-    setIsLoading(true);
-    // Simulate login
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle successful login here
-    }, 2000);
+    register(
+      { first_name: firstName, last_name: lastName, username, password },
+      {
+        onSuccess: () => {
+          router.replace("/articles");
+        },
+      }
+    );
   };
 
   const handleFirstNameChange = (text: string) => {
@@ -47,10 +51,10 @@ export default function RegisterForm() {
     setLastNameError(error); // Update email error state
   };
 
-  const handleEmailChange = (text: string) => {
-    setEmail(text);
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
     const error = validateEmail(text); // Validate on change
-    setEmailError(error); // Update email error state
+    setUsernameError(error); // Update email error state
   };
 
   const handlePasswordChange = (text: string) => {
@@ -62,11 +66,11 @@ export default function RegisterForm() {
   const isFormComplete =
     firstName !== "" &&
     lastName !== "" &&
-    email !== "" &&
+    username !== "" &&
     password !== "" &&
     !firstNameError &&
     !lastNameError &&
-    !emailError &&
+    !usernameError &&
     !passwordError;
 
   return (
@@ -90,15 +94,15 @@ export default function RegisterForm() {
           error={lastNameError}
           inputContainerStyle={styles.input}
           iconName="person"
-          onSubmitEditing={() => emailInputRef.current?.focus()}
+          onSubmitEditing={() => usernameInputRef.current?.focus()}
           inputMode="text"
         />
         <Input
-          ref={emailInputRef}
-          value={email}
+          ref={usernameInputRef}
+          value={username}
           placeholder="Email"
-          onChangeText={handleEmailChange} // Use the new handler for real-time validation
-          error={emailError}
+          onChangeText={handleUsernameChange} // Use the new handler for real-time validation
+          error={usernameError}
           inputContainerStyle={styles.input}
           iconName="mail"
           onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
@@ -119,9 +123,9 @@ export default function RegisterForm() {
         />
       </View>
       <Button
-        isLoading={isLoading}
+        isLoading={isPending}
         onPress={handleRegister}
-        disabled={!isFormComplete || isLoading} // Disable button if inputs are empty
+        disabled={!isFormComplete || isPending} // Disable button if inputs are empty
         buttonText="Register"
         style={styles.button} // Optional style for the button
       />
