@@ -3,7 +3,7 @@ import React from "react";
 
 export default function ArticlesLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
     </Stack>
   );

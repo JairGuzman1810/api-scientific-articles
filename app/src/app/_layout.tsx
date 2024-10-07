@@ -4,15 +4,16 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/src/components/useColorScheme";
-import { StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Platform, StatusBar } from "react-native";
 import Colors from "../constants/Colors";
+import QueryProvider from "../providers/QueryProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,14 +58,15 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+  if (Platform.OS === "android") {
+    NavigationBar.setBackgroundColorAsync(
+      Colors[colorScheme ?? "light"].background
+    );
+  }
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: Colors[colorScheme ?? "light"].background,
-        }}
-      >
+      <QueryProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -73,7 +75,7 @@ function RootLayoutNav() {
           barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
           backgroundColor={Colors[colorScheme ?? "light"].background}
         />
-      </SafeAreaView>
+      </QueryProvider>
     </ThemeProvider>
   );
 }

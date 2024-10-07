@@ -1,9 +1,16 @@
 import { Text } from "@/src/components/Themed";
-import { Link } from "expo-router";
+import useAuth from "@/src/hooks/useAuth";
+import { Link, Redirect } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function StartScreen() {
+  const { isAuth } = useAuth();
+
+  if (isAuth) {
+    return <Redirect href={"/articles"} />;
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -25,6 +32,7 @@ export default function StartScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
     alignItems: "center",
   },

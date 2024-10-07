@@ -1,33 +1,37 @@
 import { validateEmail, validatePassword } from "@/src/helpers/userUtils";
+import { useLogin } from "@/src/hooks/useUsers";
+import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate: login, isPending } = useLogin();
+  const router = useRouter();
 
   const passwordInputRef = useRef<TextInput>(null); // Ref for the password input
 
   const handleLogin = () => {
-    // If validation passes, you can proceed with the login logic here
-    setIsLoading(true);
-    // Simulate login
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle successful login here
-    }, 2000);
+    login(
+      { username, password },
+      {
+        onSuccess: () => {
+          router.replace("/articles");
+        },
+      }
+    );
   };
 
-  const handleEmailChange = (text: string) => {
-    setEmail(text);
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
     const error = validateEmail(text); // Validate on change
-    setEmailError(error); // Update email error state
+    setUsernameError(error); // Update email error state
   };
 
   const handlePasswordChange = (text: string) => {
@@ -37,16 +41,16 @@ export default function LoginForm() {
   };
 
   const isFormComplete =
-    email !== "" && password !== "" && !emailError && !passwordError;
+    username !== "" && password !== "" && !usernameError && !passwordError;
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Input
-          value={email}
+          value={username}
           placeholder="Email"
-          onChangeText={handleEmailChange} // Use the new handler for real-time validation
-          error={emailError}
+          onChangeText={handleUsernameChange} // Use the new handler for real-time validation
+          error={usernameError}
           inputContainerStyle={styles.input}
           iconName="mail"
           onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
@@ -67,9 +71,9 @@ export default function LoginForm() {
         />
       </View>
       <Button
-        isLoading={isLoading}
+        isLoading={isPending}
         onPress={handleLogin}
-        disabled={!isFormComplete || isLoading} // Disable button if inputs are empty
+        disabled={!isFormComplete || isPending} // Disable button if inputs are empty
         buttonText="Login"
         style={styles.button} // Optional style for the button
       />

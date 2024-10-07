@@ -38,12 +38,12 @@ const Button = ({
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 15,
-    alignItems: "center",
     backgroundColor: "#57BBBF",
     borderRadius: 50,
   },
   disabledButton: {
     backgroundColor: "#A9A9A9",
+    paddingVertical: 15,
   },
   buttonText: {
     color: "#FCFCFC",

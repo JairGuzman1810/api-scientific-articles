@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import { Text, View } from "@/src/components/Themed";
+import { Text } from "@/src/components/Themed";
 
 export default function MyArticlesScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My articles</Text>
+      <Text>My articles</Text>
     </View>
   );
 }
@@ -15,14 +15,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });
