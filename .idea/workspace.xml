@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Delete article">
-      <change afterPath="$PROJECT_DIR$/vercel.json" afterDir="false" />
+    <list default="true" id="b38bec02-179e-4fbc-81a2-cef339573995" name="Changes" comment="Vercel requirements">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -284,7 +284,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728248145255</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Vercel">
+      <option name="closed" value="true" />
+      <created>1728280491140</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1728280491140</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Vercel requirements">
+      <option name="closed" value="true" />
+      <created>1728280628179</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1728280628179</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -321,6 +337,8 @@
     <MESSAGE value="Search by fields" />
     <MESSAGE value="Readme resources" />
     <MESSAGE value="Delete article" />
-    <option name="LAST_COMMIT_MESSAGE" value="Delete article" />
+    <MESSAGE value="Vercel" />
+    <MESSAGE value="Vercel requirements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Vercel requirements" />
   </component>
 </project>
