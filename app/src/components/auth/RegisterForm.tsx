@@ -59,6 +59,16 @@ export default function RegisterForm() {
     setPasswordError(error); // Update password error state
   };
 
+  const isFormComplete =
+    firstName !== "" &&
+    lastName !== "" &&
+    email !== "" &&
+    password !== "" &&
+    !firstNameError &&
+    !lastNameError &&
+    !emailError &&
+    !passwordError;
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -111,8 +121,8 @@ export default function RegisterForm() {
       <Button
         isLoading={isLoading}
         onPress={handleRegister}
-        disabled={!email || !password} // Disable button if inputs are empty
-        buttonText="Login"
+        disabled={!isFormComplete || isLoading} // Disable button if inputs are empty
+        buttonText="Register"
         style={styles.button} // Optional style for the button
       />
     </View>

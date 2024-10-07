@@ -36,6 +36,9 @@ export default function LoginForm() {
     setPasswordError(error); // Update password error state
   };
 
+  const isFormComplete =
+    email !== "" && password !== "" && !emailError && !passwordError;
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -66,7 +69,7 @@ export default function LoginForm() {
       <Button
         isLoading={isLoading}
         onPress={handleLogin}
-        disabled={!email || !password} // Disable button if inputs are empty
+        disabled={!isFormComplete || isLoading} // Disable button if inputs are empty
         buttonText="Login"
         style={styles.button} // Optional style for the button
       />
