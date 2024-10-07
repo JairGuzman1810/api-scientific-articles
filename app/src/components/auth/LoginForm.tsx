@@ -1,3 +1,4 @@
+import { validateEmail, validatePassword } from "@/src/helpers/userUtils";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Button from "../ui/Button";
@@ -14,7 +15,25 @@ export default function LoginForm() {
   const passwordInputRef = useRef<TextInput>(null); // Ref for the password input
 
   const handleLogin = () => {
-    // Login logic here
+    // If validation passes, you can proceed with the login logic here
+    setIsLoading(true);
+    // Simulate login
+    setTimeout(() => {
+      setIsLoading(false);
+      // Handle successful login here
+    }, 2000);
+  };
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    const error = validateEmail(text); // Validate on change
+    setEmailError(error); // Update email error state
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    const error = validatePassword(text); // Validate on change
+    setPasswordError(error); // Update password error state
   };
 
   return (
@@ -23,18 +42,20 @@ export default function LoginForm() {
         <Input
           value={email}
           placeholder="Email"
-          onChangeText={setEmail}
+          onChangeText={handleEmailChange} // Use the new handler for real-time validation
           error={emailError}
           inputContainerStyle={styles.input}
           iconName="mail"
           onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
+          inputMode="email"
         />
+        {/* Display email error */}
         <Input
           ref={passwordInputRef} // Assign the ref to the password input
           value={password}
           placeholder="Password"
-          onChangeText={setPassword}
-          secureTextEntry
+          onChangeText={handlePasswordChange} // Use the new handler for real-time validation
+          secureTextEntry={!showPassword}
           showPassword={showPassword}
           togglePasswordVisibility={() => setShowPassword(!showPassword)}
           error={passwordError}
@@ -45,7 +66,7 @@ export default function LoginForm() {
       <Button
         isLoading={isLoading}
         onPress={handleLogin}
-        disabled={!email || !password}
+        disabled={!email || !password} // Disable button if inputs are empty
         buttonText="Login"
         style={styles.button} // Optional style for the button
       />
@@ -65,6 +86,11 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10, // Space between inputs
     paddingVertical: 18,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
   },
   button: {
     paddingVertical: 15,
