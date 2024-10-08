@@ -43,3 +43,13 @@ export const getArticlesByUserId = async (
   // Return the array of articles from the response
   return response.data.data;
 };
+
+export const getArticleById = async (article_id: string): Promise<Article> => {
+  // Make the API request
+  const response = await axiosInstance.get<ApiResponse<Article>>(
+    ARTICLE_API_ENDPOINTS.GET_ARTICLE_BY_ID(article_id)
+  );
+
+  // Return the article from the response
+  return response.data.data;
+};

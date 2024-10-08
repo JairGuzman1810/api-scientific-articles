@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
-import { createArticle, getArticlesByUserId } from "../api/articles/api"; // Import the createArticle function
+import {
+  createArticle,
+  getArticleById,
+  getArticlesByUserId,
+} from "../api/articles/api"; // Import the createArticle function
 import { Article } from "../helpers/type";
 
 export const useCreateArticle = () => {
@@ -82,5 +86,16 @@ export const useArticlesByUserId = (user_id: string) => {
       return articles;
     },
     enabled: !!user_id, // Only run the query if `user_id` is provided
+  });
+};
+
+export const useArticleById = (article_id: string) => {
+  return useQuery<Article, Error>({
+    queryKey: ["article", article_id], // Unique query key for articles based on user ID
+    queryFn: async () => {
+      const articles = await getArticleById(article_id); // Fetch articles using the API function
+      return articles;
+    },
+    enabled: !!article_id, // Only run the query if `user_id` is provided
   });
 };

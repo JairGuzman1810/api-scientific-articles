@@ -68,7 +68,7 @@ export default function TabLayout() {
 
     // Ensure the segment array has a length of 3
     if (segment.length !== 3) {
-      return "Article"; // Return a default title if length is not 3
+      return "Articles"; // Return a default title if length is not 3
     }
 
     // Safely cast the last segment to TitleKeys

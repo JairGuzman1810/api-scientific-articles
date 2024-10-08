@@ -1,7 +1,13 @@
 import Colors from "@/src/constants/Colors";
 import { Article } from "@/src/helpers/type";
+import { Link } from "expo-router";
 import React from "react";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import { Text } from "../Themed";
 
 type ArticleListItemProps = {
@@ -14,35 +20,39 @@ export default function ArticleListItem({ article }: ArticleListItemProps) {
   const keywords = JSON.parse(article.keywords); // Parsing keywords array
 
   return (
-    <View
+    <Link
+      href={`/articles/edit?article_id=${article.id}`}
+      asChild
       style={[
         styles.articleContainer,
         { backgroundColor: Colors[colorScheme ?? "light"].cardBackground }, // Dynamic background
       ]}
     >
-      <View style={styles.articleDetails}>
-        {/* Title */}
-        <Text numberOfLines={1} style={styles.articleTitle}>
-          {article.title}
-        </Text>
+      <TouchableOpacity>
+        <View style={styles.articleDetails}>
+          {/* Title */}
+          <Text numberOfLines={1} style={styles.articleTitle}>
+            {article.title}
+          </Text>
 
-        {/* Published by */}
-        <Text style={[styles.publishedText, styles.marginTop]}>
-          Published by{" "}
-          <Text style={styles.articleInfo}>{authors.join(", ")}</Text> in{" "}
-          <Text style={styles.articleInfo}>{article.journal}</Text>
-        </Text>
+          {/* Published by */}
+          <Text style={[styles.publishedText, styles.marginTop]}>
+            Published by{" "}
+            <Text style={styles.articleInfo}>{authors.join(", ")}</Text> in{" "}
+            <Text style={styles.articleInfo}>{article.journal}</Text>
+          </Text>
 
-        {/* Keywords */}
-        <View style={[styles.keywordContainer, styles.marginTop]}>
-          {keywords.map((keyword: string, index: number) => (
-            <View key={index} style={styles.keywordTag}>
-              <Text style={styles.keywordText}>{keyword}</Text>
-            </View>
-          ))}
+          {/* Keywords */}
+          <View style={[styles.keywordContainer, styles.marginTop]}>
+            {keywords.map((keyword: string, index: number) => (
+              <View key={index} style={styles.keywordTag}>
+                <Text style={styles.keywordText}>{keyword}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+    </Link>
   );
 }
 
