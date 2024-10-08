@@ -26,20 +26,36 @@ export default function TabLayout() {
     return <Redirect href={"/(auth)"} />;
   }
 
-  // Condicional para mostrar la flecha de retroceso si segment[2] no es undefined
-  const showBackButton = segment[2] !== undefined;
+  const showTabInfo = segment.length >= 3;
+
+  console.log(segment.length);
 
   function getProfileTitle(segment: string[]): string {
-    switch (segment[2]) {
-      case "edit":
-        return "Edit Profile";
-      case "configuration":
-        return "Profile Configuration";
-      case "settings":
-        return "Profile Settings";
-      default:
-        return "Profile";
-    }
+    // Define a type for the valid keys
+    type TitleKeys =
+      | "edit"
+      | "configurations"
+      | "settings"
+      | "change"
+      | "delete";
+
+    // Create the mapping object with explicit keys
+    const titles: Record<TitleKeys, string> = {
+      edit: "Edit Profile",
+      configurations: "Settings",
+      settings: "Profile Settings",
+      change: "Change Password",
+      delete: "Delete Account",
+    };
+
+    // Determine which key to use based on the segment length
+    const key =
+      segment.length === 3
+        ? (segment[2] as TitleKeys)
+        : (segment[3] as TitleKeys);
+
+    // Return the title or "Profile" if the key is not found
+    return titles[key] || "Profile";
   }
 
   return (
@@ -62,7 +78,7 @@ export default function TabLayout() {
             <TabBarIcon name="document-text" color={color} />
           ),
           // Si se debe mostrar el botón de retroceso
-          headerLeft: showBackButton
+          headerLeft: showTabInfo
             ? () => (
                 <TouchableOpacity onPress={() => router.back()}>
                   <Ionicons
@@ -87,6 +103,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          tabBarStyle: {
+            display: showTabInfo ? "none" : "flex",
+          },
           title: getProfileTitle(segment),
           headerTitleStyle: {
             fontFamily: "Nunito-Semibold",
@@ -94,7 +113,7 @@ export default function TabLayout() {
           },
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
-          headerLeft: showBackButton
+          headerLeft: showTabInfo
             ? () => (
                 <TouchableOpacity onPress={() => router.dismiss()}>
                   <Ionicons

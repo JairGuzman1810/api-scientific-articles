@@ -3,7 +3,7 @@ import ProfileOption from "@/src/components/profile/ProfileOption";
 import ProfileUser from "@/src/components/profile/ProfileUser";
 import useAuth from "@/src/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -19,12 +19,12 @@ export default function ProfileScreen() {
     {
       iconName: "person-outline",
       title: "Edit Profile",
-      action: () => router.navigate("/profile/edit" as Href),
+      action: () => router.navigate("/profile/edit"),
     },
     {
       iconName: "cog-outline",
       title: "Settings",
-      action: () => router.navigate("/profile/configurations" as Href),
+      action: () => router.navigate("/profile/configurations"),
     },
     {
       iconName: "exit-outline",

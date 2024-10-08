@@ -1,6 +1,12 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useUserStore } from "../store/auth"; // Import Zustand store
 import { USER_API_ENDPOINTS } from "./users/endpoints";
+
+interface ErrorResponse {
+  message?: string; // Define the shape of your error response
+}
+let isRefreshing = false; // Flag to prevent multiple refresh requests
+let pendingRequests: Array<(token: string) => void> = []; // Queue of pending requests
 
 // Create the Axios instance
 const axiosInstance = axios.create({
@@ -38,14 +44,19 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => response, // Pass through successful responses
-  async (error) => {
+  async (error: AxiosError<ErrorResponse>) => {
     const { config, response } = error;
-    const originalRequest = config; // The original request that failed
+    const originalRequest: AxiosRequestConfig | undefined = config; // The original request that failed
     const auth = useUserStore.getState().auth; // Access auth state directly
 
+    console.log(error.response?.data.message);
+
+    // Check if the error is due to an expired token (401 Unauthorized)
     if (
       response?.status === 401 &&
-      originalRequest.url !== USER_API_ENDPOINTS.LOGIN
+      originalRequest?.url !== USER_API_ENDPOINTS.LOGIN && // Use optional chaining
+      error.response?.data.message !==
+        "401 Unauthorized: Old password is incorrect" // Check the specific error message
     ) {
       try {
         // Try to refresh the access token using the refresh token
@@ -53,26 +64,41 @@ axiosInstance.interceptors.response.use(
           auth?.tokens?.refresh_token || ""
         );
 
+        console.log("New tokens received:", newTokens);
+
         // Update the tokens in the Zustand store
         useUserStore.getState().login({
           tokens: newTokens, // Replace old tokens with new ones
-          user: auth?.user!, // Pass the existing user object, ensure it exists
+          user: auth?.user!, // Pass the existing user object
         });
 
         // Retry the original request with the new access token
-        originalRequest.headers[
-          "Authorization"
-        ] = `Bearer ${newTokens.access_token}`;
+        if (originalRequest) {
+          // Ensure headers are defined
+          if (!originalRequest.headers) {
+            originalRequest.headers = {}; // Initialize headers if undefined
+          }
+          originalRequest.headers[
+            "Authorization"
+          ] = `Bearer ${newTokens.access_token}`;
 
-        return axiosInstance(originalRequest); // Retry the failed request with new token
+          console.log("Retrying request with new token:", originalRequest);
+          return axiosInstance(originalRequest); // Retry the failed request with new token
+        }
       } catch (refreshError) {
-        // If refresh token fails, log out the user
+        console.error("Error refreshing access token:", refreshError);
+        // If the refresh token fails, log out the user
         useUserStore.getState().logout();
         return Promise.reject(refreshError); // Reject the original request
       }
+    } else if (response?.status === 404) {
+      // Handle 404 errors specifically if needed
+      console.error("Resource not found:", originalRequest?.url);
+      return Promise.reject(new Error("Resource not found"));
     }
 
-    // If error is not a 401 or it's a login error, reject the error
+    // If error is not a 401 or 404, reject the error
+    console.error("Error occurred:", error);
     return Promise.reject(error);
   }
 );

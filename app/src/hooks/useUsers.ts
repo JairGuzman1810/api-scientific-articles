@@ -5,11 +5,15 @@ import {
   useQueryErrorResetBoundary,
 } from "@tanstack/react-query";
 import { Alert } from "react-native";
-import { login, register, updateUser } from "../api/users/api"; // Import the login function
+import {
+  login,
+  register,
+  updateUser,
+  updateUserPassword,
+} from "../api/users/api"; // Import the login function
 import useAuth from "./useAuth"; // Use your auth context or provider
 
 export const useLogin = () => {
-  const { reset } = useQueryErrorResetBoundary(); // Reset error boundary
   const { handleLogin } = useAuth(); // Use your auth context
   const queryClient = useQueryClient(); // Initialize query client
 
@@ -29,8 +33,6 @@ export const useLogin = () => {
     },
     onError: async (error: any) => {
       // Resetting error handling state
-      reset();
-
       // Handling various error scenarios
       if (error.response) {
         if (error.response.status === 401) {
@@ -172,6 +174,51 @@ export const useUpdateUser = () => {
         Alert.alert("Network Error", "Please check your internet connection.");
       } else {
         Alert.alert("Unexpected Error", "An unexpected error occurred.");
+      }
+    },
+  });
+};
+
+export const useUpdatePassword = () => {
+  const queryClient = useQueryClient(); // Initialize query client
+
+  return useMutation<
+    void,
+    any,
+    { id: string; new_password: string; old_password: string }
+  >({
+    mutationFn: async ({ id, new_password, old_password }) => {
+      try {
+        await updateUserPassword(id, new_password, old_password); // Call the update password function
+      } catch (error) {
+        throw error; // Rethrow the error for handling
+      }
+    },
+    onSuccess: async () => {
+      // Upon successful password update
+      await queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user data
+      Alert.alert("Success", "Your password has been updated successfully."); // Show success message
+    },
+    onError: async (error: any) => {
+      // Handling various error scenarios
+      if (error.response) {
+        if (error.response.status === 401) {
+          Alert.alert(
+            "Update Failed",
+            "The old password is incorrect. Please try again."
+          ); // Handling incorrect old password
+        } else if (error.response.status === 500) {
+          Alert.alert(
+            "Error",
+            "An unexpected error occurred. Please try again later."
+          ); // Handling internal server error
+        } else {
+          Alert.alert("Error", "An error occurred. Please try again.");
+        }
+      } else if (error.request) {
+        Alert.alert("Network Error", "Please check your internet connection."); // Handling network error
+      } else {
+        Alert.alert("Unexpected Error", "An unexpected error occurred."); // Handling unexpected errors
       }
     },
   });

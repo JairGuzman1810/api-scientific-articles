@@ -44,16 +44,14 @@ export default function EditProfileScreen() {
       },
       {
         onSuccess: () => {
-          // Show alert
           Alert.alert(
             "Success",
-            `Your profile has been updated successfully!`, // More personal message
+            `Your profile has been updated successfully!`,
             [
               {
                 text: "Confirm",
                 onPress: () => {
-                  // Add any code you want to execute upon confirmation
-                  router.dismiss(); // This is the code you want to use to close the screen
+                  router.dismiss();
                 },
               },
             ],

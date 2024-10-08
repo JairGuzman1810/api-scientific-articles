@@ -1,12 +1,11 @@
 import { Stack } from "expo-router";
 import React from "react";
 
-export default function ProfileLayout() {
+export default function ConfigurationsLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="edit" />
-      <Stack.Screen name="configurations" />
+      <Stack.Screen name="change" />
     </Stack>
   );
 }

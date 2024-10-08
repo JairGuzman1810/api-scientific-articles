@@ -116,11 +116,6 @@ const styles = StyleSheet.create({
     marginBottom: 10, // Space between inputs
     paddingVertical: 18,
   },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginTop: 5,
-  },
   buttonContainer: {
     padding: 10,
   },

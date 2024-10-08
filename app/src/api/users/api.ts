@@ -71,3 +71,17 @@ export const updateUser = async (
   // Make the API request and expect ApiResponse
   await axiosInstance.put(USER_API_ENDPOINTS.UPDATE(id), payload);
 };
+
+export const updateUserPassword = async (
+  id: string,
+  new_password: string,
+  old_password: string
+): Promise<void> => {
+  const payload = {
+    new_password,
+    old_password,
+  };
+
+  // Make the API request and expect ApiResponse
+  await axiosInstance.put(USER_API_ENDPOINTS.UPDATE_PASSWORD(id), payload);
+};
