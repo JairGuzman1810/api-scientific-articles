@@ -55,3 +55,19 @@ export const register = async (
     user,
   };
 };
+
+export const updateUser = async (
+  id: string,
+  first_name: string,
+  last_name: string,
+  username: string
+): Promise<void> => {
+  const payload = {
+    first_name,
+    last_name,
+    username,
+  };
+
+  // Make the API request and expect ApiResponse
+  await axiosInstance.put(USER_API_ENDPOINTS.UPDATE(id), payload);
+};

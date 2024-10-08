@@ -5,7 +5,7 @@ import {
   useQueryErrorResetBoundary,
 } from "@tanstack/react-query";
 import { Alert } from "react-native";
-import { login, register } from "../api/users/api"; // Import the login function
+import { login, register, updateUser } from "../api/users/api"; // Import the login function
 import useAuth from "./useAuth"; // Use your auth context or provider
 
 export const useLogin = () => {
@@ -99,6 +99,67 @@ export const useRegister = () => {
             "Registration Failed",
             "The email address is already in use. Please use a different email."
           ); // Handling email already exists
+        } else if (error.response.status === 500) {
+          Alert.alert(
+            "Error",
+            "An unexpected error occurred. Please try again later."
+          );
+        } else {
+          Alert.alert("Error", "An error occurred. Please try again.");
+        }
+      } else if (error.request) {
+        Alert.alert("Network Error", "Please check your internet connection.");
+      } else {
+        Alert.alert("Unexpected Error", "An unexpected error occurred.");
+      }
+    },
+  });
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient(); // Initialize query client
+  const { handleLogin, auth } = useAuth();
+
+  return useMutation<
+    void,
+    any,
+    {
+      userId: string;
+      first_name: string;
+      last_name: string;
+      username: string;
+    }
+  >({
+    mutationFn: async ({ userId, first_name, last_name, username }) => {
+      try {
+        await updateUser(userId, first_name, last_name, username); // Call the update function
+      } catch (error) {
+        throw error; // Rethrow the error for handling
+      }
+    },
+    onSuccess: async (data, { first_name, last_name, username }) => {
+      // Upon successful update
+      await queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user data
+      // Update the user fields in auth context
+      handleLogin({
+        ...auth, // Preserve existing auth data
+        user: {
+          ...auth?.user, // Preserve existing user data
+          first_name, // Update only the fields that have changed
+          last_name,
+          username,
+        },
+        tokens: auth?.tokens, // Ensure tokens are included
+      } as Auth); // Cast to Auth to satisfy TypeScript
+    },
+    onError: async (error: any) => {
+      // Handling various error scenarios
+      if (error.response) {
+        if (error.response.status === 409) {
+          Alert.alert(
+            "Update Failed",
+            "The username is already taken by another user. Please choose a different username."
+          ); // Handling username conflict
         } else if (error.response.status === 500) {
           Alert.alert(
             "Error",

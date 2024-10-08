@@ -2,7 +2,14 @@ import { validateEmail, validatePassword } from "@/src/helpers/userUtils";
 import { useLogin } from "@/src/hooks/useUsers";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
@@ -44,46 +51,61 @@ export default function LoginForm() {
     username !== "" && password !== "" && !usernameError && !passwordError;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Input
-          value={username}
-          placeholder="Email"
-          onChangeText={handleUsernameChange} // Use the new handler for real-time validation
-          error={usernameError}
-          inputContainerStyle={styles.input}
-          iconName="mail"
-          onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
-          inputMode="email"
-        />
-        {/* Display email error */}
-        <Input
-          ref={passwordInputRef} // Assign the ref to the password input
-          value={password}
-          placeholder="Password"
-          onChangeText={handlePasswordChange} // Use the new handler for real-time validation
-          secureTextEntry={!showPassword}
-          showPassword={showPassword}
-          togglePasswordVisibility={() => setShowPassword(!showPassword)}
-          error={passwordError}
-          inputContainerStyle={styles.input}
-          iconName="lock-closed"
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.select({ ios: 64, android: 500 })}
+    >
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="always"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.inputContainer}>
+          <Input
+            value={username}
+            placeholder="Email"
+            onChangeText={handleUsernameChange} // Use the new handler for real-time validation
+            error={usernameError}
+            inputContainerStyle={styles.input}
+            iconName="mail"
+            onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
+            inputMode="email"
+          />
+          {/* Display email error */}
+          <Input
+            ref={passwordInputRef} // Assign the ref to the password input
+            value={password}
+            placeholder="Password"
+            onChangeText={handlePasswordChange} // Use the new handler for real-time validation
+            secureTextEntry={!showPassword}
+            showPassword={showPassword}
+            togglePasswordVisibility={() => setShowPassword(!showPassword)}
+            error={passwordError}
+            inputContainerStyle={styles.input}
+            iconName="lock-closed"
+          />
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          isLoading={isPending}
+          onPress={handleLogin}
+          disabled={!isFormComplete || isPending} // Disable button if inputs are empty
+          buttonText="Login"
+          style={styles.button} // Optional style for the button
         />
       </View>
-      <Button
-        isLoading={isPending}
-        onPress={handleLogin}
-        disabled={!isFormComplete || isPending} // Disable button if inputs are empty
-        buttonText="Login"
-        style={styles.button} // Optional style for the button
-      />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
     justifyContent: "space-between", // Ensure spacing between inputs and button
     padding: 10,
   },
@@ -98,6 +120,9 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 12,
     marginTop: 5,
+  },
+  buttonContainer: {
+    padding: 10,
   },
   button: {
     paddingVertical: 15,

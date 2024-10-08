@@ -1,13 +1,17 @@
+import ProfileUser from "@/src/components/profile/ProfileUser";
+import Button from "@/src/components/ui/Button";
+import Input from "@/src/components/ui/Input";
 import {
   validateEmail,
   validateFirstName,
   validateLastName,
-  validatePassword,
 } from "@/src/helpers/userUtils";
-import { useRegister } from "@/src/hooks/useUsers";
+import useAuth from "@/src/hooks/useAuth";
+import { useUpdateUser } from "@/src/hooks/useUsers";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,32 +19,46 @@ import {
   TextInput,
   View,
 } from "react-native";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
 
-export default function RegisterForm() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function EditProfileScreen() {
+  const { auth } = useAuth();
+  const user = auth?.user;
+  const [firstName, setFirstName] = useState(user?.first_name || "");
+  const [lastName, setLastName] = useState(user?.last_name || "");
+  const [username, setUsername] = useState(user?.username || "");
   const [firstNameError, setFirstNameError] = useState<string | null>(null);
   const [lastNameError, setLastNameError] = useState<string | null>(null);
   const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const { mutate: register, isPending } = useRegister();
-  const router = useRouter();
-
   const lastNameInputRef = useRef<TextInput>(null);
   const usernameInputRef = useRef<TextInput>(null);
-  const passwordInputRef = useRef<TextInput>(null);
+  const { mutate: updateUser, isPending } = useUpdateUser();
+  const router = useRouter();
 
-  const handleRegister = () => {
-    register(
-      { first_name: firstName, last_name: lastName, username, password },
+  const handleUpdate = () => {
+    updateUser(
+      {
+        userId: String(user?.id),
+        first_name: firstName,
+        last_name: lastName,
+        username,
+      },
       {
         onSuccess: () => {
-          router.replace("/articles");
+          // Show alert
+          Alert.alert(
+            "Success",
+            `Your profile has been updated successfully!`, // More personal message
+            [
+              {
+                text: "Confirm",
+                onPress: () => {
+                  // Add any code you want to execute upon confirmation
+                  router.dismiss(); // This is the code you want to use to close the screen
+                },
+              },
+            ],
+            { cancelable: false } // This property ensures the alert cannot be dismissed by touching outside of it
+          );
         },
       }
     );
@@ -64,21 +82,13 @@ export default function RegisterForm() {
     setUsernameError(error); // Update email error state
   };
 
-  const handlePasswordChange = (text: string) => {
-    setPassword(text);
-    const error = validatePassword(text); // Validate on change
-    setPasswordError(error); // Update password error state
-  };
-
   const isFormComplete =
     firstName !== "" &&
     lastName !== "" &&
     username !== "" &&
-    password !== "" &&
     !firstNameError &&
     !lastNameError &&
-    !usernameError &&
-    !passwordError;
+    !usernameError;
 
   return (
     <KeyboardAvoidingView
@@ -91,6 +101,7 @@ export default function RegisterForm() {
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
+        <ProfileUser name={`${firstName} ${lastName}`} />
         <View style={styles.inputContainer}>
           <Input
             value={firstName}
@@ -121,30 +132,16 @@ export default function RegisterForm() {
             error={usernameError}
             inputContainerStyle={styles.input}
             iconName="mail"
-            onSubmitEditing={() => passwordInputRef.current?.focus()} // Focus on password input
             inputMode="email"
-          />
-          <Input
-            ref={passwordInputRef} // Assign the ref to the password input
-            value={password}
-            placeholder="Password"
-            onChangeText={handlePasswordChange} // Use the new handler for real-time validation
-            secureTextEntry={!showPassword}
-            showPassword={showPassword}
-            togglePasswordVisibility={() => setShowPassword(!showPassword)}
-            error={passwordError}
-            inputContainerStyle={styles.input}
-            iconName="lock-closed"
-            inputMode="text"
           />
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
         <Button
           isLoading={isPending}
-          onPress={handleRegister}
+          onPress={handleUpdate}
           disabled={!isFormComplete || isPending} // Disable button if inputs are empty
-          buttonText="Register"
+          buttonText="Update"
           style={styles.button} // Optional style for the button
         />
       </View>
@@ -158,10 +155,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     justifyContent: "space-between", // Ensure spacing between inputs and button
-    padding: 10,
   },
   inputContainer: {
     flexGrow: 1, // Allow inputs to grow and fill the available space
+    paddingHorizontal: 10,
   },
   input: {
     marginBottom: 10, // Space between inputs

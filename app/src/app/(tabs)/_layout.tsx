@@ -1,24 +1,24 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Redirect, Tabs, useSegments } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Redirect, Tabs, useRouter, useSegments } from "expo-router";
 import React from "react";
-import { Image, Pressable, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import Colors from "@/src/constants/Colors";
 import useAuth from "@/src/hooks/useAuth";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
+  name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const segment = useSegments();
+  const router = useRouter();
 
   const { isAuth } = useAuth();
 
@@ -26,7 +26,21 @@ export default function TabLayout() {
     return <Redirect href={"/(auth)"} />;
   }
 
-  console.log(segment);
+  // Condicional para mostrar la flecha de retroceso si segment[2] no es undefined
+  const showBackButton = segment[2] !== undefined;
+
+  function getProfileTitle(segment: string[]): string {
+    switch (segment[2]) {
+      case "edit":
+        return "Edit Profile";
+      case "configuration":
+        return "Profile Configuration";
+      case "settings":
+        return "Profile Settings";
+      default:
+        return "Profile";
+    }
+  }
 
   return (
     <Tabs
@@ -44,45 +58,58 @@ export default function TabLayout() {
             color: "#57BBBF",
           },
           headerTitleAlign: "center",
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-          headerLeft: () => (
-            <View style={{ marginLeft: 15 }}>
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="document-text" color={color} />
+          ),
+          // Si se debe mostrar el botón de retroceso
+          headerLeft: showBackButton
+            ? () => (
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Ionicons
+                    name="arrow-back"
+                    size={24}
+                    color={Colors[colorScheme ?? "light"].tint}
+                    style={{ marginLeft: 15 }}
+                  />
+                </TouchableOpacity>
+              )
+            : undefined,
+          headerRight: () => (
+            <View style={{ marginRight: 15 }}>
               <Image
-                source={require("../../assets/images/logo.png")} // Replace with your image URL
+                source={require("../../assets/images/logo.png")}
                 style={{ width: 40, height: 40, resizeMode: "contain" }}
               />
             </View>
-          ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="plus-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: getProfileTitle(segment),
           headerTitleStyle: {
             fontFamily: "Nunito-Semibold",
             color: "#57BBBF",
           },
           headerTitleAlign: "center",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          headerLeft: () => (
-            <View style={{ marginLeft: 15 }}>
+          tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
+          headerLeft: showBackButton
+            ? () => (
+                <TouchableOpacity onPress={() => router.dismiss()}>
+                  <Ionicons
+                    name="arrow-back"
+                    size={24}
+                    color={Colors[colorScheme ?? "light"].tint}
+                    style={{ marginLeft: 15 }}
+                  />
+                </TouchableOpacity>
+              )
+            : undefined,
+          headerRight: () => (
+            <View style={{ marginRight: 15 }}>
               <Image
-                source={require("../../assets/images/logo.png")} // Replace with your image URL
+                source={require("../../assets/images/logo.png")}
                 style={{ width: 40, height: 40, resizeMode: "contain" }}
               />
             </View>
