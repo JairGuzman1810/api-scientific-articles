@@ -2,7 +2,13 @@ import { Article } from "@/src/helpers/type";
 import { useArticlesByUserId } from "@/src/hooks/useArticles";
 import useAuth from "@/src/hooks/useAuth";
 import React, { useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Text } from "../Themed";
 import ArticleListItem from "./ArticleListItem";
 import SearchBar from "./SearchBar";
@@ -15,6 +21,8 @@ const ArticleList = () => {
     data: articles,
     isLoading,
     error,
+    refetch,
+    isRefetching,
   } = useArticlesByUserId(String(user?.id));
 
   // State for filtered articles, typed as Article[]
@@ -33,24 +41,14 @@ const ArticleList = () => {
           // If a specific filter is provided, match based on the filter
           switch (filter) {
             case "title":
-              const titleMatch = article.title
-                .toLowerCase()
-                .includes(lowerCaseSearch);
-              return titleMatch;
-
+              return article.title.toLowerCase().includes(lowerCaseSearch);
             case "doi":
-              const doiMatch = article.doi
-                .toLowerCase()
-                .includes(lowerCaseSearch);
-              return doiMatch;
-
+              return article.doi.toLowerCase().includes(lowerCaseSearch);
             case "keywords":
               const keywordsArray = JSON.parse(article.keywords);
-              const keywordMatch = keywordsArray.some((keyword: string) =>
+              return keywordsArray.some((keyword: string) =>
                 keyword.toLowerCase().includes(lowerCaseSearch)
               );
-              return keywordMatch;
-
             default:
               return false; // If an unrecognized filter is provided
           }
@@ -72,16 +70,15 @@ const ArticleList = () => {
       // Set filtered articles to the result or an empty array if no matches
       setFilteredArticles(filtered && filtered.length > 0 ? filtered : []);
     } else {
-      // If the search string is empty, set filtered articles to an empty array
-
-      setFilteredArticles([]);
+      // If the search string is empty, set filtered articles to all articles
+      setFilteredArticles(articles || []);
     }
   };
 
   return (
     <View style={styles.container}>
       <SearchBar onSearch={handleSearch} />
-      {isLoading ? (
+      {isLoading || isRefetching ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#57BBBF" />
         </View>
@@ -106,6 +103,12 @@ const ArticleList = () => {
             <View style={styles.messageContainer}>
               <Text style={styles.message}>No articles found</Text>
             </View>
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching} // Show the activity indicator while refetching
+              onRefresh={refetch} // Call the refetch function when the user pulls to refresh
+            />
           }
         />
       )}

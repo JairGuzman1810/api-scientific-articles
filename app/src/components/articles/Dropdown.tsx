@@ -70,11 +70,6 @@ const Dropdown = React.forwardRef<DropdownHandle, DropDownProps>(
           const spaceBelow = screenHeight - (pageY + height);
           const dropdownHeight = Math.min(250, data.length * 15);
 
-          let calculatedTop = pageY + height;
-          if (spaceBelow < dropdownHeight + 20) {
-            calculatedTop = pageY - dropdownHeight;
-          }
-
           setDropdownPosition({
             top: 125,
             isAbove: spaceBelow < dropdownHeight,
@@ -107,10 +102,7 @@ const Dropdown = React.forwardRef<DropdownHandle, DropDownProps>(
 
     return (
       <View ref={buttonRef} style={[styles.inputContainer, style]}>
-        <AntDesign
-          color={Colors[colorScheme ?? "light"].text}
-          name={expanded ? "caretup" : "caretdown"}
-        />
+        <AntDesign color={"#000"} name={expanded ? "caretup" : "caretdown"} />
         <TouchableOpacity style={styles.button} onPress={toggleExpanded}>
           <Text style={[styles.text, !value && { color: "#808080" }]}>
             {value || "Filter"}
