@@ -157,7 +157,12 @@ export const useUpdateUser = () => {
     onError: async (error: any) => {
       // Handling various error scenarios
       if (error.response) {
-        if (error.response.status === 409) {
+        if (error.response.status === 401) {
+          Alert.alert(
+            "Session Expired",
+            "Your session has expired. Please log in again."
+          );
+        } else if (error.response.status === 409) {
           Alert.alert(
             "Update Failed",
             "The username is already taken by another user. Please choose a different username."
@@ -203,10 +208,21 @@ export const useUpdatePassword = () => {
       // Handling various error scenarios
       if (error.response) {
         if (error.response.status === 401) {
-          Alert.alert(
-            "Update Failed",
-            "The old password is incorrect. Please try again."
-          ); // Handling incorrect old password
+          // Check if the error message indicates that the token is invalid or expired
+          if (
+            error.response.data.message ===
+            "The token provided is invalid or expired."
+          ) {
+            Alert.alert(
+              "Session Expired",
+              "Your session has expired. Please log in again."
+            );
+          } else {
+            Alert.alert(
+              "Update Failed",
+              "The old password is incorrect. Please try again."
+            ); // Handling incorrect old password
+          }
         } else if (error.response.status === 500) {
           Alert.alert(
             "Error",

@@ -1,12 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import { ApiResponse, Tokens } from "../helpers/type";
 import { useUserStore } from "../store/auth"; // Import Zustand store
 import { USER_API_ENDPOINTS } from "./users/endpoints";
 
 interface ErrorResponse {
   message?: string; // Define the shape of your error response
 }
-let isRefreshing = false; // Flag to prevent multiple refresh requests
-let pendingRequests: Array<(token: string) => void> = []; // Queue of pending requests
 
 // Create the Axios instance
 const axiosInstance = axios.create({
@@ -16,12 +15,31 @@ const axiosInstance = axios.create({
   },
 });
 
-// Function to refresh the access token using the refresh token
-const refreshAccessToken = async (refreshToken: string) => {
-  const response = await axiosInstance.post(USER_API_ENDPOINTS.TOKEN, {
-    refresh_token: refreshToken,
-  });
-  return response.data.tokens; // Expect tokens to be returned in response
+// Function to refresh the access token using the refresh token (no access token here)
+const refreshAccessToken = async (refreshToken: string): Promise<Tokens> => {
+  try {
+    const response = await axios.post<ApiResponse<{ tokens: Tokens }>>(
+      process.env.EXPO_PUBLIC_API_URL + USER_API_ENDPOINTS.TOKEN,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`, // Pass refresh token in Authorization header
+        },
+      }
+    );
+
+    // Extract tokens based on the actual structure
+    const tokens = response.data?.data?.tokens;
+
+    return tokens;
+  } catch (error: any) {
+    // Log the error details for debugging
+    console.error(
+      "Error refreshing access token:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
 };
 
 // Set up Axios interceptors immediately
@@ -49,56 +67,45 @@ axiosInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig | undefined = config; // The original request that failed
     const auth = useUserStore.getState().auth; // Access auth state directly
 
-    console.log(error.response?.data.message);
-
     // Check if the error is due to an expired token (401 Unauthorized)
     if (
       response?.status === 401 &&
-      originalRequest?.url !== USER_API_ENDPOINTS.LOGIN && // Use optional chaining
+      originalRequest?.url !== USER_API_ENDPOINTS.LOGIN &&
       error.response?.data.message !==
-        "401 Unauthorized: Old password is incorrect" // Check the specific error message
+        "401 Unauthorized: Old password is incorrect"
     ) {
       try {
         // Try to refresh the access token using the refresh token
-        const newTokens = await refreshAccessToken(
+
+        const newToken = await refreshAccessToken(
           auth?.tokens?.refresh_token || ""
         );
 
-        console.log("New tokens received:", newTokens);
-
         // Update the tokens in the Zustand store
         useUserStore.getState().login({
-          tokens: newTokens, // Replace old tokens with new ones
+          tokens: newToken, // Replace old tokens with new ones
           user: auth?.user!, // Pass the existing user object
         });
 
         // Retry the original request with the new access token
         if (originalRequest) {
-          // Ensure headers are defined
           if (!originalRequest.headers) {
             originalRequest.headers = {}; // Initialize headers if undefined
           }
           originalRequest.headers[
             "Authorization"
-          ] = `Bearer ${newTokens.access_token}`;
+          ] = `Bearer ${newToken.access_token}`;
 
-          console.log("Retrying request with new token:", originalRequest);
           return axiosInstance(originalRequest); // Retry the failed request with new token
         }
       } catch (refreshError) {
-        console.error("Error refreshing access token:", refreshError);
         // If the refresh token fails, log out the user
         useUserStore.getState().logout();
         return Promise.reject(refreshError); // Reject the original request
       }
-    } else if (response?.status === 404) {
-      // Handle 404 errors specifically if needed
-      console.error("Resource not found:", originalRequest?.url);
-      return Promise.reject(new Error("Resource not found"));
     }
 
     // If error is not a 401 or 404, reject the error
-    console.error("Error occurred:", error);
     return Promise.reject(error);
   }
 );

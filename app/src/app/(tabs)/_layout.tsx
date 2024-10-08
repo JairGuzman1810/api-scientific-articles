@@ -28,8 +28,6 @@ export default function TabLayout() {
 
   const showTabInfo = segment.length >= 3;
 
-  console.log(segment.length);
-
   function getProfileTitle(segment: string[]): string {
     // Define a type for the valid keys
     type TitleKeys =
