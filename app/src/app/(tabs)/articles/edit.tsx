@@ -11,12 +11,12 @@ import {
   validatePublicationDate,
   validateTitle,
 } from "@/src/helpers/articleUtils";
-import { useArticleById } from "@/src/hooks/useArticles";
-import useAuth from "@/src/hooks/useAuth";
-import { useLocalSearchParams } from "expo-router";
+import { useArticleById, useUpdateArticle } from "@/src/hooks/useArticles";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -27,10 +27,9 @@ import {
 
 export default function EditArticleScreen() {
   const { article_id }: { article_id: string } = useLocalSearchParams();
-
-  const { auth } = useAuth();
-  const user = auth?.user;
   const { data: article, isLoading, error } = useArticleById(article_id);
+  const { mutate: updateArticle, isPending } = useUpdateArticle();
+  const router = useRouter();
 
   // State initialization
   const [title, setTitle] = useState("");
@@ -72,9 +71,7 @@ export default function EditArticleScreen() {
       setKeywords(
         (article.keywords ? JSON.parse(article.keywords) : []).join(", ") || ""
       );
-      setPublicationDate(
-        formatPublicationDate(article?.publication_date!) // Use the utility function here
-      );
+      setPublicationDate(formatPublicationDate(article?.publication_date!));
       setJournal(article.journal || "");
       setDoi(article.doi || "");
       setNumberOfPages(String(article.pages || ""));
@@ -83,7 +80,36 @@ export default function EditArticleScreen() {
   }, [article]); // Dependency array includes article
 
   const handleCreateArticle = () => {
-    // Logic to handle article creation
+    updateArticle(
+      {
+        title,
+        authors,
+        publication_date: publicationDate,
+        keywords,
+        abstract,
+        journal,
+        pages: Number(numberOfPages),
+        article_id: Number(article_id),
+        doi,
+      },
+      {
+        onSuccess: () => {
+          Alert.alert(
+            "Success",
+            "Article updated successfully.",
+            [
+              {
+                text: "Confirm",
+                onPress: () => {
+                  router.dismiss();
+                },
+              },
+            ],
+            { cancelable: false } // This property ensures the alert cannot be dismissed by touching outside of it
+          );
+        },
+      }
+    );
   };
 
   const handleTitleChange = (text: string) => {
@@ -240,7 +266,8 @@ export default function EditArticleScreen() {
             inputContainerStyle={styles.input}
             iconName="document"
             onSubmitEditing={() => abstractInputRef.current?.focus()}
-            inputMode="text"
+            inputMode="numeric"
+            returnKeyType="done"
           />
           <Input
             ref={abstractInputRef}
@@ -257,13 +284,22 @@ export default function EditArticleScreen() {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <Button
-          isLoading={isLoading}
+          isLoading={isPending}
           onPress={handleCreateArticle}
-          disabled={!isFormComplete || isLoading}
+          disabled={!isFormComplete || isPending}
           buttonText="Update article"
           style={styles.button}
         />
       </View>
+      <Button
+        isLoading={isLoading}
+        iconName="trash"
+        iconSize={30}
+        iconColor="#FFF"
+        onPress={() => {}}
+        disabled={isPending}
+        style={styles.floatingButton}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -308,6 +344,17 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  floatingButton: {
+    position: "absolute",
+    bottom: 100,
+    right: 20, // Positioned in bottom left
+    backgroundColor: "#FF4C4C",
+    width: 60,
+    height: 60,
+    borderRadius: 30, // Rounded button
     justifyContent: "center",
     alignItems: "center",
   },

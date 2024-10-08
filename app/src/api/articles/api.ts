@@ -3,7 +3,6 @@ import axiosInstance from "../axiosConfig";
 import { ARTICLE_API_ENDPOINTS } from "./endpoints";
 
 // Function to create a new article
-// Function to create a new article
 export const createArticle = async (
   title: string,
   authors: string,
@@ -52,4 +51,34 @@ export const getArticleById = async (article_id: string): Promise<Article> => {
 
   // Return the article from the response
   return response.data.data;
+};
+
+export const updateArticle = async (
+  title: string,
+  authors: string,
+  publication_date: string,
+  keywords: string,
+  abstract: string,
+  journal: string,
+  doi: string,
+  pages: number | null,
+  article_id: number
+): Promise<void> => {
+  // Keep the return type as void
+  const payload = {
+    title,
+    authors: authors.split(",").map((author) => author.trim()), // Convert string to array of strings
+    publication_date,
+    keywords: keywords.split(",").map((keyword) => keyword.trim()), // Convert string to array of strings
+    abstract,
+    journal,
+    doi,
+    pages,
+  };
+
+  // Make the API request to update the article
+  await axiosInstance.put<ApiResponse>(
+    ARTICLE_API_ENDPOINTS.UPDATE(String(article_id)),
+    payload
+  );
 };
