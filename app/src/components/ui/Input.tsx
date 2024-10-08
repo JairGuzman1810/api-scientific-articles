@@ -17,7 +17,7 @@ interface InputProps extends TextInputProps {
   showPassword?: boolean;
   togglePasswordVisibility?: () => void;
   error?: string | null;
-  inputContainerStyle?: ViewStyle; // Optional style prop for input container
+  inputContainerStyle?: ViewStyle | ViewStyle[]; // Optional style prop for input container
   iconName: keyof typeof Ionicons.glyphMap; // Optional prop for the icon name
 }
 
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: "Poppins",
+    height: "100%",
   },
   icon: {
     marginRight: 10,

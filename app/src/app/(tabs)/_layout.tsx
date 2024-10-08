@@ -56,6 +56,28 @@ export default function TabLayout() {
     return titles[key] || "Profile";
   }
 
+  function getArticlesTitle(segment: string[]): string {
+    // Define a type for the valid keys (only 'create' and 'edit')
+    type TitleKeys = "create" | "edit";
+
+    // Create the mapping object with the titles
+    const titles: Record<TitleKeys, string> = {
+      create: "Create Article",
+      edit: "Update Article",
+    };
+
+    // Ensure the segment array has a length of 3
+    if (segment.length !== 3) {
+      return "Article"; // Return a default title if length is not 3
+    }
+
+    // Safely cast the last segment to TitleKeys
+    const key = segment[2] as TitleKeys;
+
+    // Return the appropriate title or "Article" if the key is not found
+    return titles[key] || "Article";
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -66,7 +88,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="articles"
         options={{
-          title: "Articles",
+          title: getArticlesTitle(segment),
+          tabBarStyle: {
+            display: showTabInfo ? "none" : "flex",
+          },
           headerTitleStyle: {
             fontFamily: "Nunito-Semibold",
             color: "#57BBBF",
