@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: "#A9A9A9",
-    paddingVertical: 15,
   },
   buttonText: {
     color: "#FCFCFC",

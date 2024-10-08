@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
-import { createArticle } from "../api/articles/api"; // Import the createArticle function
+import { createArticle, getArticlesByUserId } from "../api/articles/api"; // Import the createArticle function
+import { Article } from "../helpers/type";
 
 export const useCreateArticle = () => {
   const queryClient = useQueryClient(); // Initialize query client
@@ -69,5 +70,17 @@ export const useCreateArticle = () => {
         Alert.alert("Unexpected Error", "An unexpected error occurred."); // Handling unexpected errors
       }
     },
+  });
+};
+
+// Hook to fetch articles by user ID
+export const useArticlesByUserId = (user_id: string) => {
+  return useQuery<Article[], Error>({
+    queryKey: ["articles", user_id], // Unique query key for articles based on user ID
+    queryFn: async () => {
+      const articles = await getArticlesByUserId(user_id); // Fetch articles using the API function
+      return articles;
+    },
+    enabled: !!user_id, // Only run the query if `user_id` is provided
   });
 };

@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/src/helpers/type";
+import { ApiResponse, Article } from "@/src/helpers/type";
 import axiosInstance from "../axiosConfig";
 import { ARTICLE_API_ENDPOINTS } from "./endpoints";
 
@@ -30,4 +30,16 @@ export const createArticle = async (
 
   // Make the API request to create the article
   await axiosInstance.post<ApiResponse>(ARTICLE_API_ENDPOINTS.CREATE, payload);
+};
+
+export const getArticlesByUserId = async (
+  user_id: string
+): Promise<Article[]> => {
+  // Make the API request
+  const response = await axiosInstance.get<ApiResponse<Article[]>>(
+    ARTICLE_API_ENDPOINTS.GET_ARTICLES_BY_USER(user_id)
+  );
+
+  // Return the array of articles from the response
+  return response.data.data;
 };

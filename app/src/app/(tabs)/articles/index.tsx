@@ -1,4 +1,4 @@
-import SearchBar from "@/src/components/articles/SearchBar";
+import ArticleList from "@/src/components/articles/ArticleList";
 import Button from "@/src/components/ui/Button";
 import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
@@ -13,7 +13,7 @@ export default function MyArticlesScreen() {
 
   return (
     <View style={styles.container}>
-      <SearchBar />
+      <ArticleList />
       <Button
         iconName="add" // Ionicons plus icon
         iconSize={30} // Adjust icon size if needed
