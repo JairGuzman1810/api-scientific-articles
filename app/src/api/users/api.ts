@@ -85,3 +85,8 @@ export const updateUserPassword = async (
   // Make the API request and expect ApiResponse
   await axiosInstance.put(USER_API_ENDPOINTS.UPDATE_PASSWORD(id), payload);
 };
+
+export const deleteUser = async (id: string): Promise<void> => {
+  // Make the API request and expect ApiResponse
+  await axiosInstance.delete(USER_API_ENDPOINTS.DELETE(id));
+};

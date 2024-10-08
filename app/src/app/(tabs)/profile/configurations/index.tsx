@@ -16,7 +16,7 @@ export default function ConfigurationScreen() {
     {
       iconName: "trash-outline",
       title: "Delete Account",
-      action: () => router.navigate("/profile/configurations/change"),
+      action: () => router.navigate("/profile/configurations/delete"),
     },
   ];
   return (

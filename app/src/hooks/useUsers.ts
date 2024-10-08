@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { Alert } from "react-native";
 import {
+  deleteUser,
   login,
   register,
   updateUser,
@@ -223,6 +224,46 @@ export const useUpdatePassword = () => {
               "The old password is incorrect. Please try again."
             ); // Handling incorrect old password
           }
+        } else if (error.response.status === 500) {
+          Alert.alert(
+            "Error",
+            "An unexpected error occurred. Please try again later."
+          ); // Handling internal server error
+        } else {
+          Alert.alert("Error", "An error occurred. Please try again.");
+        }
+      } else if (error.request) {
+        Alert.alert("Network Error", "Please check your internet connection."); // Handling network error
+      } else {
+        Alert.alert("Unexpected Error", "An unexpected error occurred."); // Handling unexpected errors
+      }
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient(); // Initialize query client
+
+  return useMutation<void, any, { id: string }>({
+    mutationFn: async ({ id }) => {
+      try {
+        await deleteUser(id); // Call the update password function
+      } catch (error) {
+        throw error; // Rethrow the error for handling
+      }
+    },
+    onSuccess: async () => {
+      // Upon successful password update
+      await queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user data
+    },
+    onError: async (error: any) => {
+      // Handling various error scenarios
+      if (error.response) {
+        if (error.response.status === 401) {
+          Alert.alert(
+            "Session Expired",
+            "Your session has expired. Please log in again."
+          );
         } else if (error.response.status === 500) {
           Alert.alert(
             "Error",

@@ -33,7 +33,7 @@ export default function ChangePasswordScreen() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { mutate: updatePassword, isPending, error } = useUpdatePassword();
+  const { mutate: updatePassword, isPending } = useUpdatePassword();
   const router = useRouter();
 
   const newPasswordInputRef = useRef<TextInput>(null); // Ref for the new password input
