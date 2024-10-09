@@ -208,4 +208,143 @@ pip install -r requirements.txt
 python run.py
 ```
 
+# SCIAM (Scientific Articles Management) Application
+
+This repository contains the source code for the SCIAM application, designed to facilitate the management of scientific articles. Built with modern technologies, the application allows users to efficiently register, manage, and retrieve their scientific publications.
+
+## Contents
+
+- [Key Features](#key-features)
+- [Technologies and Main Dependencies](#technologies-and-main-dependencies)
+- [Complete List of Dependencies](#complete-list-of-dependencies)
+- [Setup and Installation](#setup-and-installation)
+- [Environment Variables Configuration](#environment-variables-configuration)
+- [Run the Application](#run-the-application)
+- [Application Screenshots](#application-screenshots)
+- [Download the App](#download-the-app)
+
+## Key Features
+
+- **Article Registration**: Users can input and register new scientific articles with required fields such as title, authors, publication date, keywords, abstract, journal, DOI, and pages.
+- **Article Management**:
+  - **View Articles**: List all registered articles and search by title, keywords, or DOI.
+  - **Edit Articles**: Modify existing article details with ease.
+  - **Delete Articles**: Remove articles from the system as needed.
+- **User Authentication**: Secure login and registration processes with automatic handling of token refresh and expiration for a seamless user experience.
+
+## Technologies and Main Dependencies
+
+### Axios
+Used for making API requests to interact with the backend services for articles and user management.
+
+### Zustand
+A state management library for handling application state efficiently.
+
+### React Query
+Manages server state and provides a powerful data-fetching mechanism, enhancing user experience with automatic caching and synchronization.
+
+### Async Storage
+Used for storing user preferences and data locally on the device for quick access.
+
+### TypeScript
+Ensures type safety and improves development experience.
+
+### JWT
+Manages user authentication and authorization, including automatic token refresh for enhanced security.
+
+
+
+## Complete List of Dependencies
+
+```json
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "^2.0.0",
+    "@react-navigation/native": "^6.0.2",
+    "@tanstack/react-query": "^5.59.0",
+    "axios": "^1.7.7",
+    "expo": "~51.0.28",
+    "expo-dev-client": "~4.0.27",
+    "expo-font": "~12.0.9",
+    "expo-linking": "~6.3.1",
+    "expo-router": "~3.5.23",
+    "expo-splash-screen": "~0.27.5",
+    "expo-status-bar": "~1.12.1",
+    "expo-system-ui": "~3.0.7",
+    "expo-web-browser": "~13.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "3.31.1",
+    "react-native-web": "~0.19.10",
+    "zustand": "^5.0.0-rc.2",
+    "expo-navigation-bar": "~3.0.7"
+  }
+```
+
+
+## Setup and Installation
+
+### Clone the Repository
+
+1. Clone this repository to your local machine:
+   
+```sh
+git clone "https://github.com/JairGuzman1810/wordle-react"
+```
+2. Navigate into the cloned repository:
+   
+```sh
+cd wordle-react
+```
+
+### Install Dependencies
+
+1. Run the following command to install all necessary dependencies:
+
+```sh
+npm install
+```
+
+2. Or if you prefer using Yarn:
+
+```sh
+yarn install
+```
+
+## Environment Variables Configuration
+Create a .env file in the root of the project and add the following environment variables (replace with your own values):
+```
+EXPO_PUBLIC_API_URL=your_api_url 
+```
+### Run the Application
+
+1. Once you have installed all dependencies, you can run the application using the following command:
+
+```sh
+npm run:android
+```
+
+## Application Screenshots
+
+<div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-1.jpg" alt="Captura de pantalla 1" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-2.jpg" alt="Captura de pantalla 2" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-3.jpg" alt="Captura de pantalla 3" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-4.jpg" alt="Captura de pantalla 4" width="180"/>
+</div>
+<div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-5.jpg" alt="Captura de pantalla 5" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-6.jpg" alt="Captura de pantalla 6" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-7.jpg" alt="Captura de pantalla 7" width="180"/>
+    <img src="https://github.com/JairGuzman1810/api-scientific-articles/blob/interface/app/resources/App-8.jpg" alt="Captura de pantalla 8" width="180"/>
+</div>
+
+## Download the App
+
+You can download the latest version of the SCIAM (Scientific Articles Management) app from the following link:
+
+[Download SCIAM App](https://github.com/JairGuzman1810/api-scientific-articles/raw/refs/heads/interface/app/resources/app-release.apk)
 
