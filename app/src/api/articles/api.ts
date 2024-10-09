@@ -82,3 +82,7 @@ export const updateArticle = async (
     payload
   );
 };
+
+export const deleteArticle = async (article_id: string): Promise<void> => {
+  await axiosInstance.delete(ARTICLE_API_ENDPOINTS.DELETE(article_id));
+};

@@ -11,7 +11,11 @@ import {
   validatePublicationDate,
   validateTitle,
 } from "@/src/helpers/articleUtils";
-import { useArticleById, useUpdateArticle } from "@/src/hooks/useArticles";
+import {
+  useArticleById,
+  useDeleteArticle,
+  useUpdateArticle,
+} from "@/src/hooks/useArticles";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -29,6 +33,8 @@ export default function EditArticleScreen() {
   const { article_id }: { article_id: string } = useLocalSearchParams();
   const { data: article, isLoading, error } = useArticleById(article_id);
   const { mutate: updateArticle, isPending } = useUpdateArticle();
+  const { mutate: deleteArticle, isPending: isPendingDelete } =
+    useDeleteArticle();
   const router = useRouter();
 
   // State initialization
@@ -79,7 +85,7 @@ export default function EditArticleScreen() {
     }
   }, [article]); // Dependency array includes article
 
-  const handleCreateArticle = () => {
+  const handleUpdateArticle = () => {
     updateArticle(
       {
         title,
@@ -109,6 +115,40 @@ export default function EditArticleScreen() {
           );
         },
       }
+    );
+  };
+
+  const handleDeleteArticle = () => {
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this article? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete Article",
+          onPress: () => deleteArticle({ article_id }, { onSuccess: onDelete }),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const onDelete = () => {
+    router.dismiss();
+
+    Alert.alert(
+      "Article Deleted",
+      "The article has been removed successfully.",
+      [
+        {
+          text: "OK",
+        },
+      ],
+      { cancelable: false } // Prevents the alert from being dismissible
     );
   };
 
@@ -284,20 +324,20 @@ export default function EditArticleScreen() {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <Button
-          isLoading={isPending}
-          onPress={handleCreateArticle}
-          disabled={!isFormComplete || isPending}
+          isLoading={isPending || isPendingDelete}
+          onPress={handleUpdateArticle}
+          disabled={!isFormComplete || isPending || isPendingDelete}
           buttonText="Update article"
           style={styles.button}
         />
       </View>
       <Button
-        isLoading={isLoading}
+        isLoading={isPending || isPendingDelete}
         iconName="trash"
         iconSize={30}
         iconColor="#FFF"
-        onPress={() => {}}
-        disabled={isPending}
+        onPress={handleDeleteArticle}
+        disabled={isPending || isPendingDelete}
         style={styles.floatingButton}
       />
     </KeyboardAvoidingView>
