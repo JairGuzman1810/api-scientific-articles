@@ -29,7 +29,7 @@ to create, read, update, and delete articles.
 The API is accessible through the following base URL:
 
 - For local development: `http://localhost:5000/api`
-- For production: `TODO`
+- For production: `api-scientific-articles.vercel.app`
 
 ## Authentication
 
